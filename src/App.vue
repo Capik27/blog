@@ -1,26 +1,60 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+	<a-input v-model:value="inputValue" placeholder="enter" />
+	<a-button @click="add">btn: {{ count }}</a-button>
+	<SignIn style="width: 300px" />
+	<posts-list :posts="arr" />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import PostsList from "@/components/PostsList.vue";
+import SignIn from "@/components/sign/SignIn.vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+	components: { PostsList, SignIn },
+	data() {
+		return {
+			inputValue: "",
+			count: 0,
+			arr: [
+				{ value: 1, name: "name1" },
+				{ value: 2, name: "name2" },
+				{ value: 3, name: "name3" },
+				{ value: 4, name: "name4" },
+				{ value: 5, name: "name5" },
+			],
+		};
+	},
+	methods: {
+		add() {
+			this.count++;
+		},
+	},
+};
 </script>
 
 <style>
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+	padding: 20px;
 }
 </style>
+
+<!-- <template>
+    <a-input v-model:value="value" placeholder="Basic usage" />
+  </template>
+  <script lang="ts">
+  import { defineComponent, ref } from 'vue';
+  export default defineComponent({
+    setup() {
+      const value = ref<string>('');
+      return {
+        value,
+      };
+    },
+  });
+  </script>
+   -->
