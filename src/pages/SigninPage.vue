@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<h1>SIGN <INput:c></INput:c></h1>
+		<h1>SIGN</h1>
 	</div>
 </template>
 
