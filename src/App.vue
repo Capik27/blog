@@ -1,16 +1,21 @@
 <template>
-	<a-input v-model:value="inputValue" placeholder="enter" />
-	<a-button @click="add">btn: {{ count }}</a-button>
+	<NavBar />
+	<div id="content">
+		<router-view></router-view>
+	</div>
+	<!-- <a-input v-model:value="inputValue" placeholder="enter" />
+	<a-button @click="add">{{ count }}</a-button>
 	<SignIn style="width: 300px" />
-	<posts-list :posts="arr" />
+	<posts-list :posts="arr" /> -->
 </template>
 
 <script>
-import PostsList from "@/components/PostsList.vue";
-import SignIn from "@/components/sign/SignIn.vue";
+// import PostsList from "@/components/PostsList.vue";
+// import SignIn from "@/components/sign/SignIn.vue";
+import NavBar from "@/components/NavBar.vue";
 
 export default {
-	components: { PostsList, SignIn },
+	components: { NavBar },
 	data() {
 		return {
 			inputValue: "",
@@ -38,23 +43,7 @@ export default {
 	padding: 0;
 	box-sizing: border-box;
 }
-#app {
+#content {
 	padding: 20px;
 }
 </style>
-
-<!-- <template>
-    <a-input v-model:value="value" placeholder="Basic usage" />
-  </template>
-  <script lang="ts">
-  import { defineComponent, ref } from 'vue';
-  export default defineComponent({
-    setup() {
-      const value = ref<string>('');
-      return {
-        value,
-      };
-    },
-  });
-  </script>
-   -->
