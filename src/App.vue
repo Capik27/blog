@@ -1,7 +1,7 @@
 <template>
 	<NavBar />
 	<div id="content">
-		<router-view></router-view>
+		<router-view />
 	</div>
 	<!-- <a-input v-model:value="inputValue" placeholder="enter" />
 	<a-button @click="add">{{ count }}</a-button>
@@ -38,6 +38,7 @@ export default {
 </script>
 
 <style>
+/* @import "~ant-design-vue/dist/antd.dark.css"; */
 * {
 	margin: 0;
 	padding: 0;
@@ -45,5 +46,8 @@ export default {
 }
 #content {
 	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 </style>
