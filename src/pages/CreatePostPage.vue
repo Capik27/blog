@@ -73,19 +73,24 @@ export default defineComponent({
 }
 .form_image {
 	cursor: pointer;
-	border: 1px solid black;
+	border: 1px solid #d9d9d9;
+	border-radius: 2px;
 	width: 100%;
 	height: 100%;
 	min-height: 325px;
 	min-width: 325px;
 	/* max-width: 325px; */
-
 	object-fit: cover;
 	width: 35%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	transition: all 0.33s;
 }
+.form_image:hover {
+	border-color: #1890ff;
+}
+
 .form_image img {
 	width: 100%;
 	height: 100%;
