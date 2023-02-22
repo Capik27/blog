@@ -47,7 +47,7 @@ const router = createRouter({
 	history: createWebHistory(process.env.BASE_URL),
 });
 
-import store from "../store";
+import store from "@/store";
 
 router.beforeEach((to, from, next) => {
 	if (

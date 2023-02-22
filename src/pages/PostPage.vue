@@ -1,12 +1,19 @@
 <template>
-	<div v-if="post">
-		<h1>{{ post.title }}</h1>
-		<p>{{ post.body }}</p>
+	<div class="post" v-if="post">
+		<div class="post_preview">
+			<img :src="post.previewURL" alt="post_preview" />
+		</div>
+		<div class="post_col">
+			<h1>{{ post.title }}</h1>
+			<p>{{ post.body }}</p>
+			<p>{{ post.uid }}</p>
+		</div>
 	</div>
-	<h2 v-else>LOADING...</h2>
+	<h2 v-else>Loading...</h2>
 </template>
 
 <script>
+import { downloadPost } from "@/firebase/methods";
 export default {
 	data() {
 		return {
@@ -15,16 +22,37 @@ export default {
 	},
 	methods: {
 		setPost(post) {
-			//console.log(post);
+			// console.log("post", post);
 			this.post = post;
 		},
 	},
 	created() {
-		fetch(`https://jsonplaceholder.typicode.com/posts/${this.$route.params.id}`)
-			.then((response) => response.json())
-			.then((json) => this.setPost(json));
+		downloadPost(this.$route.params.id).then((post) => {
+			this.setPost(post);
+		});
 	},
 };
 </script>
 
-<style></style>
+<style scoped>
+.post {
+	display: flex;
+}
+.post_col {
+	display: flex;
+	flex-direction: column;
+}
+.post_preview {
+	margin-right: 10px;
+	border-radius: 2px;
+	width: 256px;
+	height: 256px;
+	background-color: rgb(219, 219, 219);
+	overflow: hidden;
+}
+.post_preview img {
+	object-fit: cover;
+	width: 100%;
+	height: 100%;
+}
+</style>

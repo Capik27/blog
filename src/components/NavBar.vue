@@ -2,7 +2,7 @@
 	<div class="navbar">
 		<div>
 			<a-button @click="$router.push('/')" v-if="$store.state.auth.currentUser"
-				>Blog</a-button
+				>Posts</a-button
 			>
 			<a-button type="text" @click="changeTheme">Theme</a-button>
 			<a-button
