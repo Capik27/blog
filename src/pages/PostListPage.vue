@@ -1,36 +1,33 @@
 <template>
-	<div>
-		<h2>Post list:</h2>
-		<div class="posts-list" v-if="posts && posts.length">
-			<a-card
-				class="card"
-				hoverable
-				size="small"
-				v-for="post in posts"
-				:key="post.id"
+	<div class="posts-list" v-if="posts && posts.length">
+		<a-card
+			class="card"
+			hoverable
+			size="small"
+			v-for="post in posts"
+			:key="post.id"
+			:data-id="post.id"
+			@click.prevent="cardClick"
+		>
+			<div class="post">
+				<div class="post_preview">
+					<img :src="post.previewURL" :alt="post.previewName" />
+				</div>
+				<span>{{ post.title }}</span>
+			</div>
+			<div
+				:data-preview="post.previewName"
 				:data-id="post.id"
-				@click.prevent="cardClick"
+				class="card_delete"
+				title="delete"
+				@click.stop="handleDelete"
 			>
-				<div class="post">
-					<div class="post_preview">
-						<img :src="post.previewURL" :alt="post.previewName" />
-					</div>
-					<span>{{ post.title }}</span>
-				</div>
-				<div
-					:data-preview="post.previewName"
-					:data-id="post.id"
-					class="card_delete"
-					title="delete"
-					@click.stop="handleDelete"
-				>
-					&#10006;
-				</div>
-			</a-card>
-		</div>
-		<h1 v-if="posts && !posts.length">No posts yet</h1>
-		<h1 v-if="!posts">Loading...</h1>
+				&#10006;
+			</div>
+		</a-card>
 	</div>
+	<h1 v-if="posts && !posts.length">No posts yet</h1>
+	<h1 v-if="!posts">Loading...</h1>
 </template>
 
 <script>
@@ -75,7 +72,9 @@ export default {
 <style scoped>
 .posts-list {
 	display: flex;
-	flex-direction: column;
+	flex-wrap: wrap;
+	/* width: 100%; */
+	/* flex-direction: column; */
 	gap: 10px;
 }
 .post {
@@ -102,6 +101,8 @@ export default {
 	border-radius: 2px;
 	overflow: hidden;
 	position: relative;
+	flex-grow: 1;
+	max-width: 300px;
 }
 .card_deleting_animation {
 	transition: all 0.33s;
