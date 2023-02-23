@@ -13,9 +13,15 @@
 				<div class="post_preview">
 					<img :src="post.previewURL" :alt="post.previewName" />
 				</div>
-				<span>{{ post.title }}</span>
+				<div class="post_desc">
+					<h3>{{ post.title }}</h3>
+					<span class="post_author"
+						>by {{ $store.state.auth.currentUser.displayName }}</span
+					>
+				</div>
 			</div>
 			<div
+				v-if="post.uid === $store.state.auth.currentUser.uid"
 				:data-preview="post.previewName"
 				:data-id="post.id"
 				class="card_delete"
@@ -47,7 +53,7 @@ export default {
 			if (e.target.class === "card_delete") return;
 			const parent = e.target.closest(".card");
 			const id = parent.dataset.id;
-			this.$router.push(`/${DIR_NAME}/${id}`);
+			this.$router.push({ name: DIR_NAME, params: { id } });
 		},
 
 		handleDelete(e) {
@@ -71,21 +77,26 @@ export default {
 
 <style scoped>
 .posts-list {
-	display: flex;
-	flex-wrap: wrap;
-	/* width: 100%; */
-	/* flex-direction: column; */
+	width: 100%;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(210px, 300px));
+	justify-content: center;
 	gap: 10px;
+
+	/* display: flex;
+	flex-wrap: wrap; */
 }
 .post {
 	display: flex;
-	align-items: center;
 }
 
 .post_preview {
 	margin-right: 10px;
+	border: 1px solid #d9d9d9;
+	overflow: hidden;
 	border-radius: 2px;
 	width: 64px;
+	min-width: 64px;
 	height: 64px;
 	background-color: rgb(219, 219, 219);
 	overflow: hidden;
@@ -95,6 +106,22 @@ export default {
 	width: 100%;
 	height: 100%;
 }
+
+.post_desc {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.post_desc h3 {
+	margin: 0;
+	line-height: 16px;
+	max-height: 48px;
+	overflow: hidden;
+}
+.post_author {
+	font-size: 11px;
+	line-height: 12px;
+}
 .card {
 	background-color: #fffbfb;
 	border: 1px solid hsl(0, 0%, 90%);
@@ -102,7 +129,7 @@ export default {
 	overflow: hidden;
 	position: relative;
 	flex-grow: 1;
-	max-width: 300px;
+	/* min-width: 210px; */
 }
 .card_deleting_animation {
 	transition: all 0.33s;

@@ -1,8 +1,11 @@
 <template>
-	<NavBar />
-	<div id="content">
-		<router-view />
+	<div class="app_container">
+		<NavBar />
+		<div id="content">
+			<router-view />
+		</div>
 	</div>
+
 	<!-- <a-input v-model:value="inputValue" placeholder="enter" />
 	<a-button @click="add">{{ count }}</a-button>
 	<SignIn style="width: 300px" />
@@ -43,6 +46,14 @@ export default {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+#app {
+	display: flex;
+	justify-content: center;
+}
+.app_container {
+	max-width: 1920px;
+	flex-grow: 1;
 }
 #content {
 	padding: 20px;

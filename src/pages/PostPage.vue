@@ -6,7 +6,6 @@
 		<div class="post_col">
 			<h1>{{ post.title }}</h1>
 			<pre>{{ post.body }}</pre>
-			<p>{{ post.uid }}</p>
 		</div>
 	</div>
 	<h2 v-else>Loading...</h2>
@@ -43,11 +42,12 @@ export default {
 }
 .post_preview {
 	margin-right: 10px;
+	border: 1px solid #d9d9d9;
+	overflow: hidden;
 	border-radius: 2px;
 	width: 256px;
 	height: 256px;
 	background-color: rgb(219, 219, 219);
-	overflow: hidden;
 }
 .post_preview img {
 	object-fit: cover;

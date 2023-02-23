@@ -1,21 +1,25 @@
 <template>
 	<div class="navbar">
 		<div>
-			<a-button @click="$router.push('/')" v-if="$store.state.auth.currentUser"
+			<a-button
+				@click="$router.push({ name: 'main' })"
+				v-if="$store.state.auth.currentUser"
 				>Posts</a-button
 			>
 			<a-button type="text" @click="changeTheme">Theme</a-button>
 			<a-button
 				type="text"
-				@click="$router.push('/createpost')"
+				@click="$router.push({ name: 'createpost' })"
 				v-if="$store.state.auth.currentUser"
 				>Create post</a-button
 			>
 		</div>
 
 		<div class="navbar__sign" v-if="!$store.state.auth.currentUser">
-			<a-button type="text" @click="$router.push('/signin')">Sign in</a-button>
-			<a-button type="text" @click="$router.push('/register')"
+			<a-button type="text" @click="$router.push({ name: 'signin' })"
+				>Sign in</a-button
+			>
+			<a-button type="text" @click="$router.push({ name: 'register' })"
 				>Register</a-button
 			>
 		</div>
@@ -33,7 +37,7 @@ export default {
 		logout() {
 			// console.log("logout", this.$store.state.auth.currentUser);
 			signOut(this.$store.state.auth);
-			this.$router.push("/signin");
+			this.$router.push({ name: "signin" });
 		},
 		changeTheme() {
 			//
@@ -49,5 +53,7 @@ export default {
 	padding: 10px 20px;
 	display: flex;
 	justify-content: space-between;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 </style>

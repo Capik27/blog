@@ -15,7 +15,7 @@
 			<a-input
 				v-model:value="title"
 				show-count
-				:maxlength="50"
+				:maxlength="25"
 				placeholder="title"
 				:disabled="isLoading"
 			/>

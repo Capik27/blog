@@ -33,7 +33,8 @@ async function uploadPreview(preview, id) {
 }
 
 export async function uploadPost(uid, title, body, preview) {
-	const id = createID();
+	// const lastId = getLastPostId();
+	const id = createID(); //String(lastId + 1);
 	const previewURL = await uploadPreview(preview, id);
 	const newPost = {
 		id,
@@ -51,9 +52,18 @@ export async function uploadPost(uid, title, body, preview) {
 // DOWNLOAD
 ///////////////////////////////////////////////////////////////////////////
 
-export async function downloadAllPosts() {
+// async function getLastPostId() {
+// 	const queryPosts = await getQueryPosts();
+// 	return queryPosts.size;
+// }
+
+async function getQueryPosts() {
 	const postsCollection = collection(firestore, DIR_NAME);
-	const queryPosts = await getDocs(postsCollection);
+	return getDocs(postsCollection);
+}
+
+export async function downloadAllPosts() {
+	const queryPosts = await getQueryPosts();
 	const result = [];
 	if (queryPosts.empty) return result;
 	queryPosts.forEach(async (post) => {

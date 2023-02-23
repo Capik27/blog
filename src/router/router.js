@@ -13,7 +13,7 @@ const routes = [
 	},
 	{
 		path: "/posts/:id",
-		name: "post",
+		name: "posts",
 		component: PostPage,
 	},
 	{
