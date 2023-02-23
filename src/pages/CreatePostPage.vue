@@ -83,6 +83,10 @@ export default defineComponent({
 			e.preventDefault();
 			if (!this.title || !this.body || !this.preview) return; //CHECK
 			const uid = this.$store.state.auth.currentUser.uid;
+
+			// const body = JSON.stringify(this.body);
+			// console.log(body);
+
 			this.setIsLoading(true);
 			uploadPost(uid, this.title, this.body, this.preview).then(() => {
 				this.setIsLoading(false);

@@ -1,11 +1,11 @@
 <template>
 	<div class="post" v-if="post">
 		<div class="post_preview">
-			<img :src="post.previewURL" alt="post_preview" />
+			<img :src="post.previewURL" :alt="post.previewName" />
 		</div>
 		<div class="post_col">
 			<h1>{{ post.title }}</h1>
-			<p>{{ post.body }}</p>
+			<pre>{{ post.body }}</pre>
 			<p>{{ post.uid }}</p>
 		</div>
 	</div>
@@ -21,9 +21,8 @@ export default {
 		};
 	},
 	methods: {
-		setPost(post) {
-			// console.log("post", post);
-			this.post = post;
+		setPost(value) {
+			this.post = value;
 		},
 	},
 	created() {

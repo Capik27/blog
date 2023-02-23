@@ -8,13 +8,23 @@
 				size="small"
 				v-for="post in posts"
 				:key="post.id"
-				@click="$router.push(`/posts/${post.id}`)"
+				:data-id="post.id"
+				@click.prevent="cardClick"
 			>
 				<div class="post">
 					<div class="post_preview">
-						<img :src="post.previewURL" alt="post_preview" />
+						<img :src="post.previewURL" :alt="post.previewName" />
 					</div>
 					<span>{{ post.title }}</span>
+				</div>
+				<div
+					:data-preview="post.previewName"
+					:data-id="post.id"
+					class="card_delete"
+					title="delete"
+					@click.stop="handleDelete"
+				>
+					&#10006;
 				</div>
 			</a-card>
 		</div>
@@ -24,7 +34,8 @@
 </template>
 
 <script>
-import { downloadAllPosts } from "@/firebase/methods";
+import { downloadAllPosts, deletePost } from "@/firebase/methods";
+import { DIR_NAME } from "@/firebase/constants";
 export default {
 	data() {
 		return {
@@ -32,13 +43,30 @@ export default {
 		};
 	},
 	methods: {
-		addPosts(value) {
+		setPosts(value) {
 			this.posts = value;
+		},
+		cardClick(e) {
+			if (e.target.class === "card_delete") return;
+			const parent = e.target.closest(".card");
+			const id = parent.dataset.id;
+			this.$router.push(`/${DIR_NAME}/${id}`);
+		},
+
+		handleDelete(e) {
+			const parent = e.target.closest(".card");
+			const previewName = e.target.dataset.preview;
+			const id = e.target.dataset.id;
+			parent.classList.add("card_deleting_animation");
+			setTimeout(() => {
+				deletePost(id, previewName);
+				this.setPosts(this.posts.filter((post) => post.id !== id));
+			}, 330);
 		},
 	},
 	created() {
 		downloadAllPosts().then((res) => {
-			this.addPosts(res);
+			this.setPosts(res);
 		});
 	},
 };
@@ -72,5 +100,26 @@ export default {
 	background-color: #fffbfb;
 	border: 1px solid hsl(0, 0%, 90%);
 	border-radius: 2px;
+	overflow: hidden;
+	position: relative;
+}
+.card_deleting_animation {
+	transition: all 0.33s;
+	transform: scale(0);
+}
+.card_delete {
+	width: 16px;
+	height: 16px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+	opacity: 0.5;
+	transition: all 0.33s;
+}
+.card_delete:hover {
+	opacity: 1;
 }
 </style>

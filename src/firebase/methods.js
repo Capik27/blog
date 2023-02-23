@@ -1,16 +1,34 @@
 import { createID } from "@/utils/createID";
-import { setDoc, doc, collection, getDoc, getDocs } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import store from "@/store";
+import { DIR_NAME } from "@/firebase/constants";
+const { storage, firestore } = store.state;
+
+import {
+	deleteDoc,
+	setDoc,
+	doc,
+	collection,
+	getDoc,
+	getDocs,
+} from "firebase/firestore";
+import {
+	ref,
+	uploadBytes,
+	getDownloadURL,
+	deleteObject,
+} from "firebase/storage";
+
 //deleteDoc, query, orderBy getDownloadURL
 //deleteObject, listAll
-import store from "@/store";
-const { storage, firestore } = store.state;
+
+///////////////////////////////////////////////////////////////////////////
+// UPLOAD
+///////////////////////////////////////////////////////////////////////////
 
 async function uploadPreview(preview, id) {
 	const path = `${id}/${preview.name}`;
 	const storageRef = ref(storage, path);
 	await uploadBytes(storageRef, preview);
-
 	return await getDownloadURL(storageRef);
 }
 
@@ -22,16 +40,19 @@ export async function uploadPost(uid, title, body, preview) {
 		uid,
 		title,
 		body,
+		previewName: preview.name,
 		previewURL,
 	};
-
-	const docRef = doc(collection(firestore, "posts"), id);
-
+	const docRef = doc(collection(firestore, DIR_NAME), id);
 	return await setDoc(docRef, newPost, { merge: true });
 }
 
+///////////////////////////////////////////////////////////////////////////
+// DOWNLOAD
+///////////////////////////////////////////////////////////////////////////
+
 export async function downloadAllPosts() {
-	const postsCollection = collection(firestore, "posts");
+	const postsCollection = collection(firestore, DIR_NAME);
 	const queryPosts = await getDocs(postsCollection);
 	const result = [];
 	if (queryPosts.empty) return result;
@@ -43,13 +64,25 @@ export async function downloadAllPosts() {
 }
 
 export async function downloadPost(id) {
-	const postRef = doc(firestore, "posts", id);
+	const postRef = doc(firestore, DIR_NAME, id);
 	const postSnap = await getDoc(postRef);
-
 	if (postSnap.exists()) {
 		return postSnap.data();
-		// console.log("Document data:", postSnap.data());
 	} else {
-		console.log("No such document!");
+		throw new Error("no such doc!");
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////
+// DELETE
+///////////////////////////////////////////////////////////////////////////
+
+async function deletePostPreview(path) {
+	const previewRef = ref(storage, path);
+	await deleteObject(previewRef);
+}
+
+export async function deletePost(id, previewName) {
+	await deletePostPreview(`${id}/${previewName}`);
+	await deleteDoc(doc(firestore, DIR_NAME, id));
 }
