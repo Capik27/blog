@@ -68,7 +68,6 @@ export default {
 	width: 100%;
 	height: 100%;
 }
-
 .card {
 	background-color: #fffbfb;
 	border: 1px solid hsl(0, 0%, 90%);
