@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import { downloadAllPosts, deletePost } from "@/firebase/methods";
-import { DIR_NAME } from "@/firebase/constants";
+import { downloadPosts, deletePost } from "@/firebase/methods";
+import { PATH_POSTS } from "@/firebase/constants";
 export default {
 	data() {
 		return {
@@ -53,7 +53,7 @@ export default {
 			if (e.target.class === "card_delete") return;
 			const parent = e.target.closest(".card");
 			const id = parent.dataset.id;
-			this.$router.push({ name: DIR_NAME, params: { id } });
+			this.$router.push({ name: PATH_POSTS, params: { id } });
 		},
 
 		handleDelete(e) {
@@ -68,7 +68,7 @@ export default {
 		},
 	},
 	created() {
-		downloadAllPosts().then((res) => {
+		downloadPosts().then((res) => {
 			this.setPosts(res);
 		});
 	},
@@ -114,8 +114,8 @@ export default {
 }
 .post_desc h3 {
 	margin: 0;
-	line-height: 16px;
-	max-height: 48px;
+	line-height: 22px;
+	max-height: 44px;
 	overflow: hidden;
 }
 .post_author {
@@ -129,15 +129,20 @@ export default {
 	overflow: hidden;
 	position: relative;
 	flex-grow: 1;
+	transition: all 0.33s;
 	/* min-width: 210px; */
 }
+/* .card:hover {
+	transform: scale(102%);
+} */
 .card_deleting_animation {
 	transition: all 0.33s;
 	transform: scale(0);
 }
 .card_delete {
-	width: 16px;
-	height: 16px;
+	width: 14px;
+	height: 14px;
+	font-size: 14px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
