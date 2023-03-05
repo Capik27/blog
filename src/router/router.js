@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import NotFoundPage from "@/pages/NotFoundPage";
 import PostListPage from "@/pages/PostListPage";
 import RegisterPage from "@/pages/RegisterPage";
 import SigninPage from "@/pages/SigninPage";
@@ -31,6 +32,21 @@ const routes = [
 		name: "createpost",
 		component: CreatePostPage,
 	},
+	{
+		path: "/editpost/:id",
+		name: "editpost",
+		component: CreatePostPage,
+	},
+	// {
+	// 	path: "/notfound",
+	// 	name: "notfound",
+	// 	component: NotFoundPage,
+	// },
+	{
+		path: "/:catchAll(.*)",
+		name: "notfound",
+		component: NotFoundPage,
+	},
 
 	// {
 	// 	path: "/store",
@@ -51,12 +67,12 @@ import store from "@/store";
 
 router.beforeEach((to, from, next) => {
 	if (
+		!store.state.auth.currentUser &&
 		to.name !== "signin" &&
-		to.name !== "register" &&
-		!store.state.auth.currentUser
-	)
+		to.name !== "register"
+	) {
 		next({ name: "signin" });
-	else next();
+	} else next();
 });
 
 export default router;

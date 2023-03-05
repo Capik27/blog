@@ -25,30 +25,29 @@
 		</div>
 		<div class="navbar__sign" v-else>
 			<strong>{{ $store.state.auth.currentUser.displayName }}</strong>
-			<a-button type="text" @click="logout">Logout</a-button>
+			<a-button type="text" @click="handleLogout">Logout</a-button>
 		</div>
 	</div>
 </template>
 
 <script>
-import { signOut } from "firebase/auth";
+import { logoutAcc } from "@/firebase/methods";
 export default {
 	methods: {
-		logout() {
-			// console.log("logout", this.$store.state.auth.currentUser);
-			signOut(this.$store.state.auth);
-			this.$router.push({ name: "signin" });
+		handleLogout() {
+			this.$router.push({ name: "signin" }).then(() => {
+				const auth = this.$store.state.auth;
+				logoutAcc(auth);
+			});
 		},
-		changeTheme() {
-			//
-		},
+		changeTheme() {},
 	},
 };
 </script>
 
 <style scoped>
 .navbar {
-	background-color: hsl(0, 0%, 90%);
+	background-color: hsl(0, 0%, 89%);
 	border-bottom: 1px solid #f8f8f8;
 	padding: 10px 20px;
 	display: flex;

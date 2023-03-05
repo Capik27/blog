@@ -5,6 +5,7 @@
 			:auto-size="{ minRows: 1, maxRows: 5 }"
 			placeholder="your comment"
 			:disabled="isLoading"
+			ref="inputRef"
 		/>
 
 		<a-button
@@ -35,32 +36,39 @@ export default defineComponent({
 	},
 	setup() {
 		const value = ref("");
+		const isLoading = ref(false);
+		const inputRef = ref();
+
 		return {
 			value,
+			isLoading,
+			inputRef,
 		};
 	},
-	data() {
-		return {
-			isLoading: false,
-		};
-	},
+
 	methods: {
-		setIsLoading(value) {
-			this.isLoading = value;
+		focusInput() {
+			// console.log("focus");
+			this.inputRef.focus();
 		},
+
 		submit(e) {
 			e.preventDefault();
 			if (!this.value) return; //CHECK
 			const uid = this.$store.state.auth.currentUser.uid;
 			const name = this.$store.state.auth.currentUser.displayName;
 
-			this.setIsLoading(true);
-			uploadComment(this.id, uid, name, this.value).then(() => {
-				this.setIsLoading(false);
+			this.isLoading = true;
+			uploadComment(this.id, uid, name, this.value).then(async () => {
+				this.isLoading = false;
 				this.value = "";
-				this.upd();
+				await this.upd();
+				this.focusInput();
 			});
 		},
+	},
+	mounted() {
+		this.focusInput();
 	},
 });
 </script>

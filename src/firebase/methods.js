@@ -2,7 +2,7 @@ import { createID } from "@/utils/createID";
 import datasort from "@/utils/datasort";
 import store from "@/store";
 import { PATH_COMMENTS, PATH_POSTS } from "@/firebase/constants";
-const { storage, firestore } = store.state;
+const { storage, firestore, auth } = store.state;
 
 import {
 	serverTimestamp,
@@ -22,20 +22,86 @@ import {
 	deleteObject,
 } from "firebase/storage";
 
+import {
+	getAuth,
+	signInWithEmailAndPassword,
+	createUserWithEmailAndPassword,
+	signInWithPopup,
+	GoogleAuthProvider,
+	updateProfile,
+	signOut,
+} from "firebase/auth";
+
 //deleteDoc, query, orderBy getDownloadURL
 //deleteObject, listAll
+
+///////////////////////////////////////////////////////////////////////////
+// LOGIN
+///////////////////////////////////////////////////////////////////////////
+export async function logoutAcc(auth) {
+	return signOut(auth);
+}
+
+export async function loginGoogle() {
+	const provider = new GoogleAuthProvider();
+	const userData = await signInWithPopup(auth, provider);
+	GoogleAuthProvider.credentialFromResult(userData);
+	return userData;
+}
+
+export function loginDefault(email, pass) {
+	return signInWithEmailAndPassword(auth, email, pass);
+}
+
+///////////////////////////////////////////////////////////////////////////
+// REGISTER
+///////////////////////////////////////////////////////////////////////////
+
+export async function registerAuth(name, email, pass) {
+	const auth = getAuth();
+	await createUserWithEmailAndPassword(auth, email, pass);
+	await updateProfile(auth.currentUser, {
+		displayName: name,
+	});
+	signOut(auth);
+
+	return loginDefault(email, pass);
+}
+
+///////////////////////////////////////////////////////////////////////////
+// CHANGE
+///////////////////////////////////////////////////////////////////////////
+
+export async function changePost(post, title, body, preview) {
+	let previewURL = post.previewURL;
+	if (preview !== "preview") {
+		await deletePostPreview(`${post.id}/${post.previewName}`);
+		previewURL = await uploadPreview(preview, post.id);
+	}
+
+	const changedPost = {
+		...post,
+		title,
+		body,
+		previewURL,
+		previewName: preview.name || post.previewName,
+		changedAt: serverTimestamp(),
+	};
+	const docRef = doc(collection(firestore, PATH_POSTS), post.id);
+	return await setDoc(docRef, changedPost, { merge: true });
+}
 
 ///////////////////////////////////////////////////////////////////////////
 // UPLOAD
 ///////////////////////////////////////////////////////////////////////////
 
-export async function uploadPost(uid, title, body, preview) {
-	// const lastId = getLastPostId();
-	const id = createID(); //String(lastId + 1);
+export async function uploadPost(uid, author, title, body, preview) {
+	const id = createID();
 	const previewURL = await uploadPreview(preview, id);
 	const newPost = {
 		id,
 		uid,
+		author,
 		title,
 		body,
 		previewURL,
@@ -73,11 +139,6 @@ async function uploadPreview(preview, id) {
 // DOWNLOAD
 ///////////////////////////////////////////////////////////////////////////
 
-// async function getLastPostId() {
-// 	const queryPosts = await getQueryPosts();
-// 	return queryPosts.size;
-// }
-
 export function downloadPosts() {
 	return downloadDocs(PATH_POSTS);
 }
@@ -93,7 +154,7 @@ async function downloadDocs(path) {
 	});
 	return result;
 }
-/////////////////////////////////////
+
 export async function downloadComments(id) {
 	const comments = await downloadDoc(id, PATH_COMMENTS);
 	const result = [];
@@ -103,9 +164,11 @@ export async function downloadComments(id) {
 	result.sort(datasort);
 	return result;
 }
+
 export function downloadPost(id) {
 	return downloadDoc(id, PATH_POSTS);
 }
+
 async function downloadDoc(id, path) {
 	const docRef = doc(firestore, path, id);
 	const docSnap = await getDoc(docRef);

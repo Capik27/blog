@@ -56,9 +56,24 @@ export default {
 	flex-grow: 1;
 }
 #content {
-	padding: 20px;
+	padding: 24px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+}
+::-webkit-scrollbar {
+	width: 4px;
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: hsl(0, 0%, 89%);
+	border: 0.5px solid rgba(255, 255, 255, 0.062);
+	border-radius: 2px;
+}
+
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.1) inset;
+	background-color: transparent;
 }
 </style>

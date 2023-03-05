@@ -1,6 +1,11 @@
 <template>
 	<div class="post_comments" v-if="comments">
-		<div class="comment" v-for="com in comments" :key="com.id">
+		<div
+			class="comment"
+			v-for="com in comments"
+			:key="com.id"
+			:data-comment-id="com.id"
+		>
 			<div>
 				<span class="comment_author">{{ com.name }}</span>
 				<div class="comment_date">
@@ -10,21 +15,26 @@
 			<span class="comment_body">
 				{{ com.value }}
 			</span>
-			<div
-				v-if="com.uid === $store.state.auth.currentUser.uid"
-				:data-id="com.id"
-				:data-postid="id"
-				class="comment_delete"
-				title="delete"
-				@click.stop="handleDelete"
-			>
-				&#10006;
-			</div>
+			<a-tooltip placement="left" v-if="!isDeleting">
+				<template #title>
+					<span>Delete</span>
+				</template>
+				<div
+					v-if="com.uid === $store.state.auth.currentUser.uid"
+					:data-id="com.id"
+					:data-postid="id"
+					class="comment_delete"
+					@click.stop="handleDelete"
+				>
+					&#10006;
+				</div>
+			</a-tooltip>
+			<div v-else class="comment_delete">&#10006;</div>
 		</div>
 	</div>
-	<h1 v-if="comments && !comments.length">No comments yet</h1>
-	<h1 v-if="!comments">Loading...</h1>
-	<ComForm :upd="update" :id="id" />
+	<h2 v-if="comments && !comments.length">No comments yet</h2>
+	<a-spin v-if="!comments" class="loading" />
+	<ComForm :upd="update" :id="id" v-if="comments" />
 </template>
 
 <script>
@@ -42,6 +52,7 @@ export default {
 	data() {
 		return {
 			comments: null,
+			isDeleting: false,
 		};
 	},
 	methods: {
@@ -52,11 +63,13 @@ export default {
 			return D2S(id);
 		},
 		handleDelete(e) {
-			const parent = e.target.closest(".comment");
+			this.isDeleting = true;
 			const id = e.target.dataset.id;
 			const postId = e.target.dataset.postid;
+			const parent = document.querySelector(`[data-comment-id="${id}"]`);
 			parent.classList.add("comment_deleting_animation");
 			setTimeout(() => {
+				this.isDeleting = false;
 				deleteComment(id, postId);
 				this.setComments(this.comments.filter((com) => com.id !== id));
 			}, 330);
@@ -75,6 +88,9 @@ export default {
 </script>
 
 <style scoped>
+.loading {
+	margin-top: 25px;
+}
 .post_comments {
 	display: flex;
 	flex-direction: column;
@@ -88,12 +104,9 @@ export default {
 	background: linear-gradient(#ffffff, #dadada);
 	border-radius: 8px;
 	padding: 10px;
-	max-width: 600px;
+
 	transition: all 0.33s;
 }
-/* .comment:hover {
-	transform: translateX(5px);
-} */
 .comment_author {
 	font-size: 18px;
 	line-height: 20px;
