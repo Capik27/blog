@@ -46,10 +46,6 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
         &-affix-wrapper {
             @extend %all;
 
-            &-prefix .anticon {
-                color: #d9d9d94b;
-            }
-
             .ant-input-clear-icon:hover {
                 color: #d9d9d94b;
             }
@@ -62,11 +58,14 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
 
     .ant-tooltip {
         &-inner {
-            @extend %bg_card_color;
+            background-color: $TEXT_COLOR_DARK;
+            span {
+                color: #000000;
+            }
         }
         &-arrow {
             &-content {
-                @extend %bg_card_color;
+                background-color: $TEXT_COLOR_DARK;
             }
         }
     }
@@ -176,8 +175,13 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
 
     .card {
         @extend %all;
+        background-color: #ffffff05;
         &_controls-link {
             @extend %text_color;
+        }
+        &:hover {
+            box-shadow: 0 1px 2px -2px rgba(255, 255, 255, 0.16), 0 3px 6px 0 rgba(255, 255, 255, 0.12),
+                0 5px 12px 4px rgba(255, 255, 255, 0.09);
         }
     }
 
