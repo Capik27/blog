@@ -2,11 +2,12 @@
 	<div class="navbar">
 		<div>
 			<a-button
+				type="ghost"
 				@click="$router.push({ name: 'main' })"
 				v-if="$store.state.auth.currentUser"
 				>Posts</a-button
 			>
-			<a-button type="text" @click="changeTheme">Theme</a-button>
+			<a-button type="text" @click="handleChangeTheme">Theme</a-button>
 			<a-button
 				type="text"
 				@click="$router.push({ name: 'createpost' })"
@@ -24,7 +25,9 @@
 			>
 		</div>
 		<div class="navbar__sign" v-else>
-			<strong>{{ $store.state.auth.currentUser.displayName }}</strong>
+			<strong class="navbar-nickname">{{
+				$store.state.auth.currentUser.displayName
+			}}</strong>
 			<a-button type="text" @click="handleLogout">Logout</a-button>
 		</div>
 	</div>
@@ -40,7 +43,20 @@ export default {
 				logoutAcc(auth);
 			});
 		},
-		changeTheme() {},
+		handleChangeTheme() {
+			// this.$store.commit("toggleTheme");
+			document.querySelector("body").classList.toggle("dark");
+
+			// if (this.$store.state.theme) {
+			// 	console.log("D");
+			// 	import("@/dark.js");
+			// } else {
+			// 	console.log("L");
+			// 	import("@/light.js");
+			// }
+
+			// this.$emit("changeTheme", this.$store.state.theme);
+		},
 	},
 };
 </script>
@@ -54,5 +70,8 @@ export default {
 	justify-content: space-between;
 	border-bottom-left-radius: 4px;
 	border-bottom-right-radius: 4px;
+}
+.navbar-nickname {
+	padding: 0 15px;
 }
 </style>

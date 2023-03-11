@@ -49,7 +49,7 @@
 					cancel-text="No"
 					@confirm="handleDelete"
 				>
-					<a-button :loading="isLoading">Delete</a-button></a-popconfirm
+					<a-button :disabled="isLoading">Delete</a-button></a-popconfirm
 				>
 			</div>
 		</div>

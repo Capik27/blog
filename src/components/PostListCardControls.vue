@@ -90,9 +90,9 @@ export default {
 }
 
 .card_controls-link {
-	color: black;
+	color: rgba(0, 0, 0, 0.25);
 	text-decoration: none;
-	opacity: 0.25;
+
 	font-size: 14px;
 	transition: all 0.33s;
 }

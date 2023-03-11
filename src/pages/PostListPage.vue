@@ -9,7 +9,7 @@
 			:data-id="post.id"
 			@click.prevent="cardClick"
 		>
-			<div class="post">
+			<div class="card_post">
 				<div class="post_preview">
 					<img :src="post.previewURL" :alt="post.previewName" />
 				</div>
@@ -79,7 +79,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .loading {
 	margin-top: 55px;
 }
@@ -95,7 +95,7 @@ export default {
 	/* display: flex;
 	flex-wrap: wrap; */
 }
-.post {
+.card_post {
 	display: flex;
 }
 

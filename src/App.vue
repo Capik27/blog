@@ -5,43 +5,28 @@
 			<router-view />
 		</div>
 	</div>
-
-	<!-- <a-input v-model:value="inputValue" placeholder="enter" />
-	<a-button @click="add">{{ count }}</a-button>
-	<SignIn style="width: 300px" />
-	<posts-list :posts="arr" /> -->
 </template>
 
 <script>
-// import PostsList from "@/components/PostsList.vue";
-// import SignIn from "@/components/sign/SignIn.vue";
 import NavBar from "@/components/NavBar.vue";
 
 export default {
 	components: { NavBar },
 	data() {
 		return {
-			inputValue: "",
-			count: 0,
-			arr: [
-				{ value: 1, name: "name1" },
-				{ value: 2, name: "name2" },
-				{ value: 3, name: "name3" },
-				{ value: 4, name: "name4" },
-				{ value: 5, name: "name5" },
-			],
+			//themeClass: "app_container",
 		};
 	},
 	methods: {
-		add() {
-			this.count++;
+		changeTheme(e) {
+			console.log("emit", e);
 		},
 	},
 };
 </script>
 
-<style>
-/* @import "~ant-design-vue/dist/antd.dark.css"; */
+<style lang="scss">
+@import "@/dark.scss";
 * {
 	margin: 0;
 	padding: 0;
@@ -50,30 +35,34 @@ export default {
 #app {
 	display: flex;
 	justify-content: center;
+	height: 100vh;
 }
 .app_container {
 	max-width: 1920px;
 	flex-grow: 1;
+	transition: all 0.33s;
 }
+
 #content {
 	padding: 24px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
+
 ::-webkit-scrollbar {
 	width: 4px;
 	background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-	background-color: hsl(0, 0%, 89%);
-	border: 0.5px solid rgba(255, 255, 255, 0.062);
+	background-color: rgba(126, 126, 126, 0.336);
+	border: transparent;
 	border-radius: 2px;
 }
 
 ::-webkit-scrollbar-track {
-	-webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.1) inset;
+	-webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.123) inset;
 	background-color: transparent;
 }
 </style>

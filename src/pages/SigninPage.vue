@@ -21,9 +21,7 @@
 					placeholder="Email"
 					:disabled="isGooLoading || isDefLoading"
 				>
-					<template #prefix
-						><MailOutlined style="color: rgba(0, 0, 0, 0.25)"
-					/></template>
+					<template #prefix><MailOutlined class="sign_icon" /></template>
 				</a-input>
 			</a-form-item>
 			<a-form-item>
@@ -33,9 +31,7 @@
 					placeholder="Password"
 					:disabled="isGooLoading || isDefLoading"
 				>
-					<template #prefix
-						><LockOutlined style="color: rgba(0, 0, 0, 0.25)"
-					/></template>
+					<template #prefix><LockOutlined class="sign_icon" /></template>
 				</a-input-password>
 			</a-form-item>
 			<a-form-item class="sign_default">
@@ -169,5 +165,8 @@ export default defineComponent({
 	color: rgba(0, 0, 0, 0.25);
 	font-size: 16px;
 	line-height: 16px;
+}
+.sign_icon {
+	color: rgba(0, 0, 0, 0.25);
 }
 </style>

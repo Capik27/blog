@@ -99,7 +99,6 @@ export default {
 .comment {
 	display: flex;
 	flex-direction: column;
-	gap: 5px;
 	position: relative;
 	background: linear-gradient(#ffffff, #dadada);
 	border-radius: 8px;
@@ -120,6 +119,7 @@ export default {
 	line-height: 15px;
 }
 .comment_body {
+	margin-top: 5px;
 	line-height: 18px;
 	overflow-wrap: break-word;
 }

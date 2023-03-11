@@ -9,6 +9,10 @@ export default createStore({
 		storage,
 	},
 	getters: {},
-	mutations: {},
+	mutations: {
+		toggleTheme(state) {
+			state.theme = !state.theme;
+		},
+	},
 	actions: {},
 });

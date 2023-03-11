@@ -1,0 +1,336 @@
+$BORDER_COLOR_DARK: #d9d9d950;
+
+$TEXT_COLOR_DARK: #d9d9d995;
+$BG_COLOR: #000000;
+$BG_CARD_COLOR: rgb(20, 20, 20);
+
+%text_color {
+    color: $TEXT_COLOR_DARK;
+}
+%border {
+    border: 1px solid $BORDER_COLOR_DARK;
+}
+%bg_color {
+    background-color: $BG_COLOR;
+}
+%bg_card_color {
+    background-color: $BG_CARD_COLOR;
+}
+%all {
+    @extend %border;
+    @extend %bg_color;
+    @extend %text_color;
+}
+
+.dark {
+    @extend %bg_color;
+    @extend %text_color;
+
+    .ant-message-notice-content {
+        @extend %all;
+    }
+
+    .ant-input {
+        @extend %all;
+
+        &::placeholder {
+            @extend %text_color;
+        }
+        &:focus {
+            border-color: #1890ff;
+        }
+        &:hover {
+            border-color: #1890ff;
+        }
+
+        &-affix-wrapper {
+            @extend %all;
+
+            &-prefix .anticon {
+                color: #d9d9d94b;
+            }
+
+            .ant-input-clear-icon:hover {
+                color: #d9d9d94b;
+            }
+
+            span {
+                @extend %text_color;
+            }
+        }
+    }
+
+    .ant-tooltip {
+        &-inner {
+            @extend %bg_card_color;
+        }
+        &-arrow {
+            &-content {
+                @extend %bg_card_color;
+            }
+        }
+    }
+    .ant-popover {
+        &-inner {
+            @extend %bg_card_color;
+        }
+        &-arrow {
+            &-content {
+                @extend %bg_card_color;
+            }
+        }
+        &-message-title {
+            @extend %text_color;
+        }
+        .ant-btn {
+            transition: all 0.33s;
+            @extend %text_color;
+            @extend %border;
+            background-color: transparent;
+            &:hover {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+
+            &-primary {
+                color: $BG_COLOR;
+                background-color: $TEXT_COLOR_DARK;
+                border: $TEXT_COLOR_DARK;
+
+                &:hover {
+                    color: $BG_COLOR;
+                    background-color: #d9d9d9b0;
+                    border: #d9d9d9b0;
+                }
+            }
+        }
+    }
+
+    .navbar {
+        @extend %bg_card_color;
+        border-bottom: 1px solid rgba(20, 20, 20, 0.363);
+
+        span {
+            @extend %text_color;
+        }
+
+        .ant-btn {
+            transition: all 0.33s;
+            @extend %text_color;
+            background-color: transparent;
+            &:hover {
+                background-color: rgba(46, 46, 46, 0.5);
+            }
+
+            &-ghost {
+                transition: all 0.33s;
+                span {
+                    transition: all 0.33s;
+                    color: $TEXT_COLOR_DARK;
+                }
+                @extend %border;
+                &:hover {
+                    span {
+                        color: #1890ff;
+                    }
+                    border-color: #1890ff;
+                }
+            }
+        }
+    }
+
+    .post {
+        @extend %all;
+        h2 {
+            @extend %text_color;
+        }
+        &_preview {
+            @extend %all;
+        }
+        &_desc h3 {
+            @extend %text_color;
+        }
+        &_container {
+            h2 {
+                @extend %text_color;
+            }
+        }
+
+        &_controls {
+            button {
+                transition: all 0.33s;
+                @extend %text_color;
+                @extend %border;
+                background-color: transparent;
+                &:hover {
+                    color: #1890ff;
+                    border-color: #1890ff;
+                }
+                &:focus {
+                    color: #1890ff;
+                    border-color: #1890ff;
+                }
+            }
+        }
+    }
+
+    .card {
+        @extend %all;
+        &_controls-link {
+            @extend %text_color;
+        }
+    }
+
+    .form_image {
+        @extend %all;
+        .ant-empty {
+            opacity: 0.45;
+        }
+    }
+    .form_controls {
+        button {
+            transition: all 0.33s;
+            @extend %text_color;
+            @extend %border;
+            background-color: transparent;
+
+            &:hover {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+            &:focus {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+
+            &[disabled] {
+                background: $BG_CARD_COLOR;
+                cursor: not-allowed;
+
+                &:hover {
+                    @extend %text_color;
+                    @extend %border;
+                }
+            }
+        }
+    }
+
+    .comment {
+        background: linear-gradient(#000000, $BG_CARD_COLOR);
+    }
+
+    .comment_form {
+        .comment_btn {
+            transition: all 0.33s;
+            @extend %text_color;
+            @extend %border;
+            background-color: transparent;
+
+            &:hover {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+            &:focus {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+
+            &[disabled] {
+                background: $BG_CARD_COLOR;
+                cursor: not-allowed;
+
+                &:hover {
+                    @extend %text_color;
+                    @extend %border;
+                }
+            }
+        }
+    }
+
+    .form_container,
+    .sign_container {
+        @extend %all;
+        .ant-form-item-has-error
+            :not(.ant-input-affix-wrapper-disabled):not(.ant-input-affix-wrapper-borderless).ant-input-affix-wrapper {
+            @extend %bg_color;
+            border-color: #ff4d4f;
+            input {
+                @extend %bg_color;
+            }
+        }
+
+        span {
+            @extend %text_color;
+        }
+
+        button {
+            transition: all 0.33s;
+            @extend %text_color;
+            @extend %border;
+            background-color: transparent;
+
+            &:hover {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+            &:focus {
+                color: #1890ff;
+                border-color: #1890ff;
+            }
+
+            &[disabled] {
+                background: $BG_CARD_COLOR;
+                cursor: not-allowed;
+
+                &:hover {
+                    @extend %text_color;
+                    @extend %border;
+                }
+            }
+        }
+
+        .ant-btn-primary {
+            transition: all 0.33s;
+            span {
+                color: black;
+            }
+            background-color: #d9d9d950;
+            border: 1px solid #d9d9d950;
+
+            &:hover,
+            &:focus {
+                span {
+                    color: black;
+                }
+                background-color: #d9d9d99d;
+                border-color: #d9d9d99d;
+            }
+
+            &[disabled] {
+                span {
+                    @extend %text_color;
+                }
+                @extend %border;
+                background: $BG_CARD_COLOR;
+
+                cursor: not-allowed;
+
+                &:hover {
+                    span {
+                        @extend %text_color;
+                    }
+                    @extend %text_color;
+                    @extend %border;
+                }
+            }
+        }
+
+        .line {
+            border-bottom: 1px solid $BORDER_COLOR_DARK;
+        }
+        .line:after {
+            @extend %text_color;
+            @extend %bg_color;
+        }
+    }
+}

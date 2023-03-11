@@ -21,7 +21,7 @@
 			class="post_controls"
 			v-if="$store.state.auth.currentUser.uid === post.uid"
 		>
-			<a-button :loading="isLoading" @click="handleEdit">Edit</a-button>
+			<a-button :disabled="isLoading" @click="handleEdit">Edit</a-button>
 			<a-popconfirm
 				title="Are you sure?"
 				ok-text="Yes"
@@ -122,6 +122,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	min-width: 256px;
+	max-height: 256px;
 }
 .post_title {
 	margin-bottom: 5px;
