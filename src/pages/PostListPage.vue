@@ -86,7 +86,6 @@ export default {
 
 .posts-list {
 	width: 100%;
-	padding-top: 26px;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(210px, 300px));
 	justify-content: center;

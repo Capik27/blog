@@ -29,7 +29,12 @@
 					&#10006;
 				</div>
 			</a-tooltip>
-			<div v-else class="comment_delete">&#10006;</div>
+			<div
+				v-if="isDeleting && com.uid === $store.state.auth.currentUser.uid"
+				class="comment_delete"
+			>
+				&#10006;
+			</div>
 		</div>
 	</div>
 	<h2 v-if="comments && !comments.length">No comments yet</h2>

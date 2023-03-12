@@ -81,6 +81,8 @@ import {
 import { EMAIL_REGEXP } from "@/utils/reg_exp";
 import { registerAuth } from "@/firebase/methods";
 import { defineComponent, reactive, ref } from "vue";
+import { ERROR_SIGN_CASES } from "@/firebase/constants";
+import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -176,7 +178,7 @@ export default defineComponent({
 					});
 				})
 				.catch((error) => {
-					console.log("error", error);
+					message.error(ERROR_SIGN_CASES[error.code]);
 				})
 				.finally(() => {
 					resetForm();
@@ -185,7 +187,7 @@ export default defineComponent({
 			// console.log("handleFinish", values);
 		};
 		const handleFinishFailed = (errors) => {
-			console.log("errors", errors);
+			console.log(errors);
 		};
 
 		const handleValidate = () => {

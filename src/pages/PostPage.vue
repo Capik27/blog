@@ -85,7 +85,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .loading {
 	margin-top: 127px;
 }
@@ -155,6 +155,7 @@ export default {
 }
 .post_body {
 	margin: 0;
+	padding-right: 4px;
 	flex-grow: 1;
 	/* overflow: hidden; */
 	overflow-y: auto;

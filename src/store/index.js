@@ -3,16 +3,13 @@ import { auth, firestore, storage } from "@/firebase/init_firebase";
 
 export default createStore({
 	state: {
-		theme: false,
 		auth,
 		firestore,
 		storage,
 	},
 	getters: {},
 	mutations: {
-		toggleTheme(state) {
-			state.theme = !state.theme;
-		},
+		//
 	},
 	actions: {},
 });

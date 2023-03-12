@@ -37,25 +37,11 @@ const routes = [
 		name: "editpost",
 		component: CreatePostPage,
 	},
-	// {
-	// 	path: "/notfound",
-	// 	name: "notfound",
-	// 	component: NotFoundPage,
-	// },
 	{
 		path: "/:catchAll(.*)",
 		name: "notfound",
 		component: NotFoundPage,
 	},
-
-	// {
-	// 	path: "/store",
-	// 	component: PostPageWithStore,
-	// },
-	// {
-	// 	path: "/composition",
-	// 	component: PostPageCompositionApi,
-	// },
 ];
 
 const router = createRouter({

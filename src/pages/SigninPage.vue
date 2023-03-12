@@ -60,9 +60,11 @@ import {
 	LockOutlined,
 	GoogleOutlined,
 } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
 import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { loginGoogle, loginDefault } from "@/firebase/methods";
+import { ERROR_SIGN_CASES } from "@/firebase/constants";
 
 export default defineComponent({
 	components: {
@@ -79,16 +81,18 @@ export default defineComponent({
 			pass: "",
 		});
 		const handleFinish = () => {
-			// console.log(values, formState);
 			isDefLoading.value = true;
 			loginDefault(formState.email, formState.pass)
 				.then(() => {
-					router.push("/");
-					isDefLoading.value = false;
+					router.push({ name: "main" });
 				})
 				.catch((error) => {
-					isDefLoading.value = false;
-					console.log("error / ", error);
+					message.error(ERROR_SIGN_CASES[error.code]);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						isDefLoading.value = false;
+					}, 1000);
 				});
 		};
 		const handleFinishFailed = (errors) => {
@@ -96,10 +100,18 @@ export default defineComponent({
 		};
 		const handleLoginGoogle = () => {
 			isGooLoading.value = true;
-			loginGoogle().then(() => {
-				router.push({ name: "main" });
-				isGooLoading.value = false;
-			});
+			loginGoogle()
+				.then(() => {
+					router.push({ name: "main" });
+				})
+				.catch((error) => {
+					message.error(ERROR_SIGN_CASES[error.code]);
+				})
+				.finally(() => {
+					setTimeout(() => {
+						isGooLoading.value = false;
+					}, 1000);
+				});
 		};
 
 		return {

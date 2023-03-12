@@ -25,10 +25,10 @@
 			>
 		</div>
 		<div class="navbar__sign" v-else>
-			<strong class="navbar-nickname">{{
-				$store.state.auth.currentUser.displayName
-			}}</strong>
-			<a-button type="text" @click="handleLogout">Logout</a-button>
+			<div class="navbar-nickname">
+				<strong>{{ $store.state.auth.currentUser.displayName }}</strong>
+				<a-button type="text" @click="handleLogout">Logout</a-button>
+			</div>
 		</div>
 	</div>
 	<div class="navbar navbar_mob">

@@ -33,12 +33,21 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
     .ant-input {
         @extend %all;
 
+        &[disabled] {
+            background: $BG_CARD_COLOR;
+            cursor: not-allowed;
+
+            &:hover,
+            &:focus {
+                @extend %text_color;
+                border-color: $BORDER_COLOR_DARK;
+            }
+        }
+
         &::placeholder {
             @extend %text_color;
         }
-        &:focus {
-            border-color: #1890ff;
-        }
+        &:focus,
         &:hover {
             border-color: #1890ff;
         }
@@ -46,12 +55,31 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
         &-affix-wrapper {
             @extend %all;
 
+            &::placeholder {
+                @extend %text_color;
+            }
+            &:focus,
+            &:hover {
+                border-color: #1890ff;
+            }
+
             .ant-input-clear-icon:hover {
                 color: #d9d9d94b;
             }
 
             span {
                 @extend %text_color;
+            }
+
+            &-disabled {
+                background: $BG_CARD_COLOR;
+                cursor: not-allowed;
+
+                &:hover,
+                &:focus {
+                    @extend %text_color;
+                    border-color: $BORDER_COLOR_DARK;
+                }
             }
         }
     }

@@ -175,7 +175,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .create_form {
 	display: flex;
 	justify-content: center;
@@ -226,6 +226,7 @@ export default defineComponent({
 		flex-direction: column;
 		align-items: center;
 		justify-content: flex-start;
+		max-height: max-content;
 	}
 	.form_text {
 		width: 100%;

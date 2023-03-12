@@ -27,6 +27,7 @@ export default {
 
 <style lang="scss">
 @import "@/dark.scss";
+
 * {
 	margin: 0;
 	padding: 0;
@@ -44,25 +45,30 @@ export default {
 }
 
 #content {
-	padding: 24px;
+	padding: 50px 24px 24px 24px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	overflow-x: hidden;
 }
 
-::-webkit-scrollbar {
-	width: 4px;
-	background-color: transparent;
-}
+html {
+	overflow-x: hidden;
 
-::-webkit-scrollbar-thumb {
-	background-color: rgba(126, 126, 126, 0.336);
-	border: transparent;
-	border-radius: 2px;
-}
+	::-webkit-scrollbar {
+		width: 4px;
+		background-color: transparent;
+	}
 
-::-webkit-scrollbar-track {
-	-webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.123) inset;
-	background-color: transparent;
+	::-webkit-scrollbar-thumb {
+		background-color: rgba(126, 126, 126, 0.336);
+		border: transparent;
+		border-radius: 2px;
+	}
+
+	::-webkit-scrollbar-track {
+		-webkit-box-shadow: 5px 5px 5px -5px rgba(34, 60, 80, 0.123) inset;
+		background-color: transparent;
+	}
 }
 </style>
