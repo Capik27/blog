@@ -49,7 +49,9 @@
 					cancel-text="No"
 					@confirm="handleDelete"
 				>
-					<a-button :disabled="isLoading">Delete</a-button></a-popconfirm
+					<a-button :loading="isLoading" :disabled="isLoading"
+						>Delete</a-button
+					></a-popconfirm
 				>
 			</div>
 		</div>
@@ -64,6 +66,7 @@ import {
 	downloadPost,
 	deletePost,
 } from "@/firebase/methods";
+import { BLANK_PIXEL_SRC } from "@/utils/blank_pixel_src";
 import { message } from "ant-design-vue";
 export default defineComponent({
 	setup() {
@@ -102,6 +105,7 @@ export default defineComponent({
 		changeInput(e) {
 			if (!e.target.files.length) return;
 			const file = Array.from(e.target.files)[0];
+			this.setImgSrc(BLANK_PIXEL_SRC);
 			this.preview = file;
 			const reader = new FileReader();
 			reader.onload = (e) => {
@@ -140,13 +144,17 @@ export default defineComponent({
 			}
 		},
 		handleDelete() {
-			this.isLoading = true;
+			this.setIsLoading(true);
 			const id = this.post.id;
 			const previewName = this.post.previewName;
-			deletePost(id, previewName).then(() => {
-				this.isLoading = false;
-				this.$router.push({ name: "main" });
-			});
+			deletePost(id, previewName)
+				.then(() => {
+					message.success(`Post "${this.title}" deleted`);
+					this.$router.push({ name: "main" });
+				})
+				.finally(() => {
+					this.setIsLoading(false);
+				});
 		},
 		async getPost() {
 			const post = await downloadPost(this.$route.params.id);
@@ -169,7 +177,7 @@ export default defineComponent({
 			this.body = "";
 			this.preview = null;
 			this.post = null;
-			this.setImgSrc("");
+			this.setImgSrc(BLANK_PIXEL_SRC);
 		},
 	},
 });

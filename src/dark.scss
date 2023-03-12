@@ -168,6 +168,7 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
 
     .post {
         @extend %all;
+        background-color: #ffffff05;
         h2 {
             @extend %text_color;
         }
@@ -189,13 +190,21 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
                 @extend %text_color;
                 @extend %border;
                 background-color: transparent;
-                &:hover {
-                    color: #1890ff;
-                    border-color: #1890ff;
-                }
+                &:hover,
                 &:focus {
                     color: #1890ff;
                     border-color: #1890ff;
+                }
+
+                &[disabled] {
+                    background: $BG_CARD_COLOR;
+                    cursor: not-allowed;
+
+                    &:hover,
+                    &:focus {
+                        @extend %text_color;
+                        border-color: $BORDER_COLOR_DARK;
+                    }
                 }
             }
         }
@@ -236,7 +245,7 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
             }
 
             &[disabled] {
-                background: $BG_CARD_COLOR;
+                background-color: $BG_CARD_COLOR;
                 cursor: not-allowed;
 
                 &:hover {

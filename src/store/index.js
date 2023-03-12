@@ -8,8 +8,6 @@ export default createStore({
 		storage,
 	},
 	getters: {},
-	mutations: {
-		//
-	},
+	mutations: {},
 	actions: {},
 });

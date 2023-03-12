@@ -34,7 +34,7 @@ import {
 	EditOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons-vue";
-// import { message } from "ant-design-vue";
+import { message } from "ant-design-vue";
 import { deletePost } from "@/firebase/methods";
 export default {
 	components: { EditOutlined, DeleteOutlined },
@@ -61,8 +61,15 @@ export default {
 			const id = this.post.id;
 			const parent = document.querySelector(`[data-id="${id}"]`);
 			parent.classList.add("card_deleting_animation");
+			deletePost(id, previewName)
+				.then(() => {
+					message.success(`Post "${this.post.title}" deleted`);
+					this.$router.push({ name: "main" });
+				})
+				.catch((error) => {
+					message.error(`Error: ` + error.code);
+				});
 			setTimeout(() => {
-				deletePost(id, previewName);
 				this.updateList(id);
 			}, 330);
 		},
