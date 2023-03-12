@@ -17,20 +17,33 @@
 				</p>
 			</div>
 		</div>
-		<div
-			class="post_controls"
-			v-if="$store.state.auth.currentUser.uid === post.uid"
-		>
-			<a-button :disabled="isLoading" @click="handleEdit">Edit</a-button>
-			<a-popconfirm
-				title="Are you sure?"
-				ok-text="Yes"
-				cancel-text="No"
-				@confirm="handleDelete"
+		<div class="post_row">
+			<div class="post_likes">
+				<a-button
+					type="text"
+					:class="likeIdPressed ? 'post_likes-pressed' : 'post_likes-icon'"
+					@click="handleToggleLike"
+				>
+					<template #icon><HeartFilled /></template>
+				</a-button>
+				<strong v-if="likes">{{ likes.length }}</strong>
+			</div>
+			<div
+				class="post_controls"
+				v-if="$store.state.auth.currentUser.uid === post.uid"
 			>
-				<a-button :loading="isLoading">Delete</a-button></a-popconfirm
-			>
+				<a-button :disabled="isLoading" @click="handleEdit">Edit</a-button>
+				<a-popconfirm
+					title="Are you sure?"
+					ok-text="Yes"
+					cancel-text="No"
+					@confirm="handleDelete"
+				>
+					<a-button :loading="isLoading">Delete</a-button></a-popconfirm
+				>
+			</div>
 		</div>
+
 		<ComList v-if="!isLoading" :id="post.id" />
 		<a-spin size="large" v-else class="loading-comments" />
 	</div>
@@ -38,14 +51,23 @@
 </template>
 
 <script>
+import { HeartFilled } from "@ant-design/icons-vue";
 import ComList from "@/components/ComList.vue";
-import { downloadPost, deletePost } from "@/firebase/methods";
+import {
+	downloadPost,
+	downloadLikes,
+	uploadLike,
+	deleteLike,
+	deletePost,
+} from "@/firebase/methods";
 import D2S from "@/utils/D2S";
 export default {
-	components: { ComList },
+	components: { ComList, HeartFilled },
 	data() {
 		return {
 			post: null,
+			likes: null,
+			likeIdPressed: false,
 			isLoading: false,
 		};
 	},
@@ -56,7 +78,27 @@ export default {
 		getMessageDate(timestamp) {
 			return D2S(timestamp);
 		},
-
+		checkLikePressed(uid) {
+			let result = null;
+			this.likes.forEach((like) => {
+				if (like.uid === uid) {
+					result = like.id;
+				}
+			});
+			this.likeIdPressed = result;
+		},
+		handleToggleLike() {
+			if (this.likeIdPressed) {
+				deleteLike(this.likeIdPressed, this.post.id).then(() => {
+					this.updateLikes();
+				});
+			} else {
+				const uid = this.$store.state.auth.currentUser.uid;
+				uploadLike(this.post.id, uid).then(() => {
+					this.updateLikes();
+				});
+			}
+		},
 		handleEdit() {
 			const id = this.post.id;
 			this.$router.push({
@@ -73,9 +115,19 @@ export default {
 				this.$router.push({ name: "main" });
 			});
 		},
+		async updateLikes() {
+			this.likes = await downloadLikes(this.post.id);
+			const uid = this.$store.state.auth.currentUser.uid;
+			this.checkLikePressed(uid);
+			//
+			// console.log("length", this.likes.length);
+			// console.log("pressed", this.likeIdPressed);
+		},
 		update() {
-			downloadPost(this.$route.params.id).then((post) => {
+			const id = this.$route.params.id;
+			downloadPost(id).then((post) => {
 				this.setPost(post);
+				this.updateLikes();
 			});
 		},
 	},
@@ -100,10 +152,38 @@ export default {
 	width: fit-content;
 	max-width: 768px;
 }
+.post_row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.post_likes {
+	display: flex;
+	align-items: center;
+	justify-self: flex-start;
+	gap: 2px;
+	color: rgba(0, 0, 0, 0.55);
+
+	strong {
+		font-size: 12px;
+	}
+
+	&-icon {
+		transition: all 0.33s;
+		color: rgba(0, 0, 0, 0.55);
+	}
+
+	&-pressed {
+		transition: all 0.33s;
+		color: rgba(255, 0, 0, 0.9);
+	}
+}
+
 .post_controls {
 	display: flex;
 	gap: 10px;
-	justify-content: flex-end;
+	justify-self: flex-end;
 }
 
 .post {

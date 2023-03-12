@@ -94,6 +94,8 @@ export default {
 	position: absolute;
 	right: 4px;
 	top: 4px;
+	transition: all 0.33s;
+	opacity: 0;
 }
 
 .card_controls-link {

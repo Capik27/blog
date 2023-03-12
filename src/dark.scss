@@ -183,6 +183,32 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
                 @extend %text_color;
             }
         }
+        &_likes {
+            span,
+            strong {
+                @extend %text_color;
+            }
+
+            .ant-btn {
+                transition: all 0.33s;
+
+                background-color: transparent;
+                &:hover {
+                    background-color: rgba(46, 46, 46, 0.5);
+                }
+            }
+            &-icon {
+                span {
+                    transition: all 0.33s;
+                }
+            }
+            &-pressed {
+                span {
+                    transition: all 0.33s;
+                    color: rgba(255, 0, 0, 0.9);
+                }
+            }
+        }
 
         &_controls {
             button {

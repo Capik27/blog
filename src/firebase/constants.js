@@ -1,5 +1,6 @@
 export const PATH_POSTS = "posts";
 export const PATH_COMMENTS = "comments";
+export const PATH_LIKES = "likes";
 
 export const ERROR_SIGN_CASES = {
 	"auth/user-not-found": "User not found",

@@ -139,11 +139,14 @@ export default {
 	position: relative;
 	flex-grow: 1;
 	transition: all 0.33s;
-	/* min-width: 210px; */
+
+	&:hover {
+		.card_controls {
+			opacity: 1;
+		}
+	}
 }
-/* .card:hover {
-	transform: scale(102%);
-} */
+
 .card_deleting_animation {
 	transition: all 0.33s;
 	transform: scale(0);

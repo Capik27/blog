@@ -1,7 +1,7 @@
 import { createID } from "@/utils/createID";
 import datasort from "@/utils/datasort";
 import store from "@/store";
-import { PATH_COMMENTS, PATH_POSTS } from "@/firebase/constants";
+import { PATH_COMMENTS, PATH_POSTS, PATH_LIKES } from "@/firebase/constants";
 const { storage, firestore, auth } = store.state;
 
 import {
@@ -125,6 +125,20 @@ export async function uploadComment(postId, uid, name, value) {
 	return setDoc(docRef, db, { merge: true });
 }
 
+export async function uploadLike(postId, uid) {
+	const id = createID();
+	const newLike = {
+		id,
+		uid,
+		createdAt: serverTimestamp(),
+	};
+	const db = {
+		[id]: newLike,
+	};
+	const docRef = doc(collection(firestore, PATH_LIKES), postId);
+	return setDoc(docRef, db, { merge: true });
+}
+
 async function uploadPreview(preview, id) {
 	const path = `${id}/${preview.name}`;
 	const storageRef = ref(storage, path);
@@ -162,6 +176,15 @@ export async function downloadComments(id) {
 	return result;
 }
 
+export async function downloadLikes(id) {
+	const likes = await downloadDoc(id, PATH_LIKES);
+	const result = [];
+	for (const key in likes) {
+		result.push(likes[key]);
+	}
+	return result;
+}
+
 export function downloadPost(id) {
 	return downloadDoc(id, PATH_POSTS);
 }
@@ -190,6 +213,7 @@ export async function deletePost(id, previewName) {
 	await deletePostPreview(`${id}/${previewName}`);
 	await deleteDoc(doc(firestore, PATH_POSTS, id));
 	await deleteDoc(doc(firestore, PATH_COMMENTS, id));
+	await deleteDoc(doc(firestore, PATH_LIKES, id));
 }
 
 export async function deleteComment(id, postId) {
@@ -197,5 +221,13 @@ export async function deleteComment(id, postId) {
 	const db = {
 		[id]: deleteField(),
 	};
-	setDoc(docRef, db, { merge: true });
+	return setDoc(docRef, db, { merge: true });
+}
+
+export async function deleteLike(id, postId) {
+	const docRef = doc(firestore, PATH_LIKES, postId);
+	const db = {
+		[id]: deleteField(),
+	};
+	return setDoc(docRef, db, { merge: true });
 }
