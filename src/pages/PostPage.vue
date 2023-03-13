@@ -237,10 +237,9 @@ export default {
 	margin: 0;
 	padding-right: 4px;
 	flex-grow: 1;
-	/* overflow: hidden; */
 	overflow-y: auto;
+	word-break: break-word;
 	white-space: pre-wrap;
-	overflow-wrap: break-word;
 	max-height: 200px;
 }
 .post_preview {

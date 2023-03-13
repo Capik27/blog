@@ -115,7 +115,7 @@ export default {
 	font-size: 18px;
 	line-height: 20px;
 	font-weight: 500;
-	margin-right: 10px;
+	margin-right: 5px;
 	white-space: nowrap;
 }
 .comment_date {
@@ -126,7 +126,8 @@ export default {
 .comment_body {
 	margin-top: 5px;
 	line-height: 18px;
-	overflow-wrap: break-word;
+	word-break: break-word;
+	white-space: pre-wrap;
 }
 .comment_deleting_animation {
 	transition: all 0.33s;
