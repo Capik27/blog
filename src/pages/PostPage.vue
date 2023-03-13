@@ -240,6 +240,7 @@ export default {
 	/* overflow: hidden; */
 	overflow-y: auto;
 	white-space: pre-wrap;
+	overflow-wrap: break-word;
 	max-height: 200px;
 }
 .post_preview {

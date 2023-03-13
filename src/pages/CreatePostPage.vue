@@ -66,6 +66,7 @@ import {
 	downloadPost,
 	deletePost,
 } from "@/firebase/methods";
+import { PATH_POSTS } from "@/firebase/constants";
 import { BLANK_PIXEL_SRC } from "@/utils/blank_pixel_src";
 import { message } from "ant-design-vue";
 export default defineComponent({
@@ -140,6 +141,8 @@ export default defineComponent({
 					})
 					.finally(() => {
 						this.setIsLoading(false);
+						const id = this.post.id;
+						this.$router.push({ name: PATH_POSTS, params: { id } });
 					});
 			}
 		},
