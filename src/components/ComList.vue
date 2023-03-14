@@ -20,7 +20,10 @@
 					<span>Delete</span>
 				</template>
 				<div
-					v-if="com.uid === $store.state.auth.currentUser.uid"
+					v-if="
+						$store.state.auth.currentUser &&
+						com.uid === $store.state.auth.currentUser.uid
+					"
 					:data-id="com.id"
 					:data-postid="id"
 					class="comment_delete"
@@ -30,7 +33,11 @@
 				</div>
 			</a-tooltip>
 			<div
-				v-if="isDeleting && com.uid === $store.state.auth.currentUser.uid"
+				v-if="
+					isDeleting &&
+					$store.state.auth.currentUser &&
+					com.uid === $store.state.auth.currentUser.uid
+				"
 				class="comment_delete"
 			>
 				&#10006;

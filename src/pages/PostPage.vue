@@ -30,7 +30,10 @@
 			</div>
 			<div
 				class="post_controls"
-				v-if="$store.state.auth.currentUser.uid === post.uid"
+				v-if="
+					$store.state.auth.currentUser &&
+					$store.state.auth.currentUser.uid === post.uid
+				"
 			>
 				<a-button :disabled="isLoading" @click="handleEdit">Edit</a-button>
 				<a-popconfirm

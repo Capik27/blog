@@ -1,6 +1,6 @@
 <template>
 	<div class="app_container">
-		<NavBar />
+		<NavBar :key="navbarKey" />
 		<div id="content">
 			<router-view />
 		</div>
@@ -14,13 +14,26 @@ export default {
 	components: { NavBar },
 	data() {
 		return {
-			//themeClass: "app_container",
+			navbarKey: 0,
 		};
 	},
-	methods: {
-		changeTheme(e) {
-			console.log("emit", e);
-		},
+	methods: {},
+	created() {
+		//CHECK IF RELOAD PAGE WITH AUTH
+		if (sessionStorage.user) {
+			const period = 125;
+			const timer = setInterval(() => {
+				if (this.$store.state.auth.currentUser) {
+					this.navbarKey++;
+					this.$router.push({ name: "main" });
+					clearInterval(timer);
+				}
+			}, period);
+		}
+		//CHECK THEME WITH AUTH
+		if (sessionStorage.theme) {
+			document.querySelector("body").classList.add("dark");
+		}
 	},
 };
 </script>

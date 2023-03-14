@@ -83,7 +83,8 @@ export default defineComponent({
 		const handleFinish = () => {
 			isDefLoading.value = true;
 			loginDefault(formState.email, formState.pass)
-				.then(() => {
+				.then((cred) => {
+					sessionStorage.user = cred.user.uid;
 					router.push({ name: "main" });
 				})
 				.catch((error) => {
@@ -101,7 +102,8 @@ export default defineComponent({
 		const handleLoginGoogle = () => {
 			isGooLoading.value = true;
 			loginGoogle()
-				.then(() => {
+				.then((cred) => {
+					sessionStorage.user = cred.user.uid;
 					router.push({ name: "main" });
 				})
 				.catch((error) => {

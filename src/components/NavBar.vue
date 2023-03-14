@@ -120,12 +120,6 @@
 	</div>
 </template>
 
-<!-- <a-tooltip placement="bottom">
-	<template #title>
-		<span>Posts</span>
-	</template>
-</a-tooltip> -->
-
 <script>
 import { logoutAcc } from "@/firebase/methods";
 import {
@@ -149,14 +143,20 @@ export default {
 	},
 	methods: {
 		handleLogout() {
-			this.$router.push({ name: "signin" }).then(() => {
-				const auth = this.$store.state.auth;
-				logoutAcc(auth);
+			logoutAcc().then(() => {
+				delete sessionStorage.user;
+				this.$router.push({ name: "signin" });
 			});
 		},
 		handleChangeTheme() {
 			// this.$store.commit("toggleTheme");
 			document.querySelector("body").classList.toggle("dark");
+
+			if (sessionStorage.theme) {
+				delete sessionStorage.theme;
+			} else {
+				sessionStorage.theme = "dark";
+			}
 		},
 	},
 };

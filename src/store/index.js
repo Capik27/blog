@@ -8,6 +8,10 @@ export default createStore({
 		storage,
 	},
 	getters: {},
-	mutations: {},
+	mutations: {
+		// setUserAuth(state, payload) {
+		// 	state.auth.currentUser = payload.value;
+		// },
+	},
 	actions: {},
 });

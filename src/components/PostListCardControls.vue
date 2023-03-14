@@ -1,6 +1,9 @@
 <template>
 	<div
-		v-if="post.uid === $store.state.auth.currentUser.uid"
+		v-if="
+			$store.state.auth.currentUser &&
+			$store.state.auth.currentUser.uid === post.uid
+		"
 		@click.stop
 		class="card_controls"
 	>

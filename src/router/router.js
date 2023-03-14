@@ -52,13 +52,20 @@ const router = createRouter({
 import store from "@/store";
 
 router.beforeEach((to, from, next) => {
-	if (
-		!store.state.auth.currentUser &&
-		to.name !== "signin" &&
-		to.name !== "register"
-	) {
-		next({ name: "signin" });
-	} else next();
+	// console.log("route");
+	// console.log(store.state.auth.currentUser?.displayName);
+	//
+	if (!store.state.auth.currentUser) {
+		if (to.name != "signin" && to.name != "register") {
+			next({ name: "signin" });
+		} else next();
+	}
+	//
+	if (store.state.auth.currentUser) {
+		if (to.name == "signin" || to.name == "register") {
+			next({ name: "main" });
+		} else next();
+	}
 });
 
 export default router;
