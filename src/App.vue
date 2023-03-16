@@ -24,8 +24,16 @@ export default {
 			const period = 125;
 			const timer = setInterval(() => {
 				if (this.$store.state.auth.currentUser) {
+					const index = sessionStorage.redirect.indexOf("/blog") + 5;
+					const redirect = sessionStorage.redirect.slice(index);
+					delete sessionStorage.redirect;
+
 					this.navbarKey++;
-					this.$router.push({ name: "main" });
+
+					if (redirect && redirect != location.href) {
+						this.$router.push(redirect);
+					}
+					//this.$router.push({ name: "main" });
 					clearInterval(timer);
 				}
 			}, period);
