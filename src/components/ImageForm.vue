@@ -40,6 +40,7 @@ export default defineComponent({
 	methods: {
 		reset() {
 			this.src = "";
+			this.returnImageFile(this.src);
 		},
 
 		openInput() {
@@ -92,9 +93,8 @@ export default defineComponent({
 		img {
 			filter: brightness(0.25);
 		}
-
 		.form_image-reset {
-			color: #1890ff;
+			opacity: 1;
 		}
 
 		.ant-empty {
@@ -103,16 +103,16 @@ export default defineComponent({
 	}
 
 	&-reset {
-		font-size: 12px;
+		font-size: 13px;
 		position: absolute;
 		top: 7px;
 		right: 7px;
+		opacity: 0;
 		transition: all 0.33s;
 		color: #7c7c7c;
-		opacity: 0.5;
 
 		&:hover {
-			opacity: 1;
+			color: #d9d9d94b;
 		}
 	}
 }
