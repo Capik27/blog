@@ -71,7 +71,7 @@ export async function registerAuth(name, email, pass) {
 
 export async function changePost(post, title, body, preview) {
 	let previewURL = post.previewURL;
-	if (preview !== "preview") {
+	if (typeof preview != "string") {
 		await deletePostPreview(`${post.id}/${post.previewName}`);
 		previewURL = await uploadPreview(preview, post.id);
 	}

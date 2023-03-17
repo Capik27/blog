@@ -5,6 +5,7 @@ import RegisterPage from "@/pages/RegisterPage";
 import SigninPage from "@/pages/SigninPage";
 import PostPage from "@/pages/PostPage";
 import CreatePostPage from "@/pages/CreatePostPage";
+import EditPostPage from "@/pages/EditPostPage";
 
 const routes = [
 	{
@@ -35,7 +36,7 @@ const routes = [
 	{
 		path: "/editpost/:id",
 		name: "editpost",
-		component: CreatePostPage,
+		component: EditPostPage,
 	},
 	{
 		path: "/:catchAll(.*)",
@@ -53,7 +54,7 @@ import store from "@/store";
 
 router.beforeEach((to, from, next) => {
 	// console.log("route");
-	// console.log(store.state.auth.currentUser?.displayName);
+
 	//
 	if (!store.state.auth.currentUser) {
 		if (to.name != "signin" && to.name != "register") {
