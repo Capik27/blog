@@ -1,10 +1,13 @@
 <template>
 	<div class="posts-list" v-if="posts && posts.length">
+		<a-input @change="searchChange" allow-clear class="search">
+			<template #prefix> <SearchOutlined /> </template
+		></a-input>
 		<a-card
 			class="card"
 			hoverable
 			size="small"
-			v-for="post in posts"
+			v-for="post in filtered"
 			:key="post.id"
 			:data-id="post.id"
 			@click.prevent="cardClick"
@@ -22,33 +25,28 @@
 		</a-card>
 	</div>
 	<h1 v-if="posts && !posts.length">No posts yet</h1>
-	<a-spin v-if="!posts" class="loading" />
+	<a-spin v-if="!posts" class="loading" size="large" />
 </template>
 
 <script>
-// import {
-// 	SettingOutlined,
-// 	EditOutlined,
-// 	DeleteOutlined,
-// } from "@ant-design/icons-vue";
+import { SearchOutlined } from "@ant-design/icons-vue";
 import PostListCardControls from "@/components/PostListCardControls.vue";
 import { downloadPosts, deletePost } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
 export default {
 	components: {
-		// SettingOutlined,
-		// EditOutlined,
-		// DeleteOutlined,
 		PostListCardControls,
+		SearchOutlined,
 	},
 	data() {
 		return {
 			posts: null,
+			filtered: null,
 		};
 	},
 	methods: {
-		setPosts(value) {
-			this.posts = value;
+		setFilteredPosts(value) {
+			this.filtered = value;
 		},
 		cardClick(e) {
 			if (e.target.class === "card_delete") return;
@@ -67,13 +65,23 @@ export default {
 				this.updateList(id);
 			}, 330);
 		},
+		searchChange(e) {
+			this.setFilteredPosts(
+				this.posts.filter(
+					(post) =>
+						post.title.toLowerCase().includes(e.target.value) ||
+						post.author.toLowerCase().includes(e.target.value)
+				)
+			);
+		},
 		updateList(id) {
-			this.setPosts(this.posts.filter((post) => post.id !== id));
+			this.setFilteredPosts(this.filtered.filter((post) => post.id !== id));
 		},
 	},
 	created() {
 		downloadPosts().then((res) => {
-			this.setPosts(res);
+			this.setFilteredPosts(res);
+			this.posts = res;
 		});
 	},
 };
@@ -96,6 +104,11 @@ export default {
 }
 .card_post {
 	display: flex;
+}
+
+.search {
+	margin-bottom: 25px;
+	grid-column: 1 / -1;
 }
 
 .post_preview {

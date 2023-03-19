@@ -67,7 +67,6 @@ export default defineComponent({
 	},
 	mounted() {
 		if (this.post) {
-			// console.log("post", this.post);
 			this.preview = this.post.previewURL;
 			this.title = this.post.title;
 			this.body = this.post.body;
