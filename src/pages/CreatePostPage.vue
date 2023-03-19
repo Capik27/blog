@@ -1,17 +1,5 @@
 <template>
-	<form class="create-edit_form">
-		<PostForm ref="postFormRef" />
-		<div class="form_controls">
-			<a-button
-				html-type="submit"
-				@click.prevent="submit"
-				:disabled="isLoading"
-				:loading="isLoading"
-				>Submit</a-button
-			>
-			<a-button :disabled="isLoading" @click="resetForms">Reset</a-button>
-		</div>
-	</form>
+	<PostForm ref="postFormRef" :onSubmit="submit" />
 </template>
 
 <script>
@@ -25,21 +13,18 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			isLoading: false,
+			isSubmiting: false,
 		};
 	},
 	methods: {
 		getFormParams() {
 			return this.$refs.postFormRef.getFormParams();
 		},
-		resetForms() {
-			this.$refs.postFormRef.reset();
-		},
 		submit() {
 			const { title, body, preview } = this.getFormParams();
 			if (!title || !body || !preview) return; //CHECK
 
-			this.isLoading = true;
+			this.$refs.postFormRef.setIsLoading(true);
 
 			const uid = this.$store.state.auth.currentUser.uid;
 			const author = this.$store.state.auth.currentUser.displayName;
@@ -47,28 +32,12 @@ export default defineComponent({
 			uploadPost(uid, author, title, body, preview)
 				.then(() => {
 					message.success(`Post "${title}" added`);
-					this.resetForms();
+					this.$refs.postFormRef.reset();
 				})
 				.finally(() => {
-					this.isLoading = false;
+					this.$refs.postFormRef.setIsLoading(false);
 				});
 		},
 	},
 });
 </script>
-
-<style lang="scss" scoped>
-.create-edit_form {
-	display: flex;
-	flex-direction: column;
-	max-height: max-content;
-	width: 100%;
-	max-width: 768px;
-}
-.form_controls {
-	margin-top: 10px;
-	display: flex;
-	gap: 10px;
-	align-self: flex-end;
-}
-</style>

@@ -1,28 +1,12 @@
 <template>
-	<form class="create-edit_form" v-if="post">
-		<PostForm :post="post" ref="postFormRef" />
-		<div class="form_controls">
-			<a-button
-				html-type="submit"
-				@click.prevent="submit"
-				:disabled="isDeleting || isLoading"
-				:loading="isLoading"
-				>Submit</a-button
-			>
-			<a-popconfirm
-				v-if="post"
-				title="Are you sure?"
-				ok-text="Yes"
-				cancel-text="No"
-				@confirm="handleDelete"
-			>
-				<a-button :loading="isDeleting" :disabled="isDeleting || isLoading"
-					>Delete</a-button
-				></a-popconfirm
-			>
-		</div>
-	</form>
-	<a-spin size="large" v-if="!post" />
+	<PostForm
+		v-if="post"
+		ref="postFormRef"
+		:post="post"
+		:onSubmit="submit"
+		:onDelete="handleDelete"
+	/>
+	<a-spin size="large" v-else />
 </template>
 
 <script>
@@ -37,8 +21,6 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			isLoading: false,
-			isDeleting: false,
 			post: "",
 		};
 	},
@@ -50,21 +32,21 @@ export default defineComponent({
 			const { title, body, preview } = this.getFormParams();
 			if (!title || !body || !preview) return; //CHECK
 
-			this.isLoading = true;
+			this.$refs.postFormRef.setIsLoading(true);
 
 			changePost(this.post, title, body, preview)
 				.then(() => {
 					message.success(`Post "${this.post.title}" changed`);
 				})
 				.finally(() => {
-					this.isLoading = false;
+					this.$refs.postFormRef.setIsLoading(false);
 					const id = this.post.id;
 					this.$router.push({ name: PATH_POSTS, params: { id } });
 				});
 		},
 
 		handleDelete() {
-			this.isDeleting = true;
+			this.$refs.postFormRef.setIsDeleting(true);
 			const id = this.post.id;
 			const previewName = this.post.previewName;
 			deletePost(id, previewName)
@@ -73,7 +55,7 @@ export default defineComponent({
 					this.$router.push({ name: "main" });
 				})
 				.finally(() => {
-					this.isDeleting = false;
+					this.$refs.postFormRef.setIsDeleting(false);
 				});
 		},
 	},
@@ -84,20 +66,3 @@ export default defineComponent({
 	},
 });
 </script>
-
-<style lang="scss" scoped>
-.create-edit_form {
-	display: flex;
-	flex-direction: column;
-	max-height: max-content;
-	width: 100%;
-	max-width: 768px;
-}
-
-.form_controls {
-	margin-top: 10px;
-	display: flex;
-	gap: 10px;
-	align-self: flex-end;
-}
-</style>
