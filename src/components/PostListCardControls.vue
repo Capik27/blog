@@ -46,7 +46,7 @@ export default {
 			type: Object,
 			required: true,
 		},
-		updateList: {
+		deleteCard: {
 			type: Function,
 			required: true,
 		},
@@ -73,7 +73,7 @@ export default {
 					message.error(`Error: ` + error.code);
 				});
 			setTimeout(() => {
-				this.updateList(id);
+				this.deleteCard(id);
 			}, 330);
 		},
 		handleConfirm() {

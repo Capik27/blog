@@ -21,7 +21,7 @@
 					<span class="post_author">by {{ post.author }}</span>
 				</div>
 			</div>
-			<PostListCardControls :updateList="updateList" :post="post" />
+			<PostListCardControls :deleteCard="deleteCard" :post="post" />
 		</a-card>
 	</div>
 	<h1 v-if="posts && !posts.length">No posts yet</h1>
@@ -31,7 +31,7 @@
 <script>
 import { SearchOutlined } from "@ant-design/icons-vue";
 import PostListCardControls from "@/components/PostListCardControls.vue";
-import { downloadPosts, deletePost } from "@/firebase/methods";
+import { downloadPosts } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
 export default {
 	components: {
@@ -55,16 +55,6 @@ export default {
 			this.$router.push({ name: PATH_POSTS, params: { id } });
 		},
 
-		handleDelete(e) {
-			const parent = e.target.closest(".card");
-			const previewName = e.target.dataset.preview;
-			const id = e.target.dataset.id;
-			parent.classList.add("card_deleting_animation");
-			setTimeout(() => {
-				deletePost(id, previewName);
-				this.updateList(id);
-			}, 330);
-		},
 		searchChange(e) {
 			this.setFilteredPosts(
 				this.posts.filter(
@@ -74,8 +64,9 @@ export default {
 				)
 			);
 		},
-		updateList(id) {
+		deleteCard(id) {
 			this.setFilteredPosts(this.filtered.filter((post) => post.id !== id));
+			this.posts = this.posts.filter((post) => post.id !== id);
 		},
 	},
 	created() {
