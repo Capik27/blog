@@ -29,6 +29,7 @@
 <script>
 import PostListCardControls from "@/components/PostListCardControls.vue";
 import SearchForm from "@/components/SearchForm.vue";
+import dateInRange from "@/utils/dateInRange";
 import { downloadPosts } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
 export default {
@@ -53,16 +54,17 @@ export default {
 			this.$router.push({ name: PATH_POSTS, params: { id } });
 		},
 
-		searchHandler(value, option) {
-			if (!value) {
-				this.setFilteredPosts(this.posts);
-				return;
-			}
-			this.setFilteredPosts(
-				this.posts.filter((post) =>
-					post?.[option].toLowerCase().includes(value)
-				)
+		searchHandler(value, selectType, timeFilter) {
+			// Фильтруем по времени
+			let result = this.posts.filter((post) =>
+				dateInRange(post.createdAt.toDate(), timeFilter)
 			);
+			// Фильтруем по параметру автор/тайтл
+			result = result.filter((post) =>
+				post?.[selectType].toLowerCase().includes(value.toLowerCase())
+			);
+
+			this.setFilteredPosts(result);
 		},
 		deleteCard(id) {
 			this.setFilteredPosts(this.filtered.filter((post) => post.id !== id));

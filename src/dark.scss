@@ -33,24 +33,30 @@ $BG_CL: #ffffff05;
     }
 
     .ant-input-group {
+        transition: all 0.33s;
         .ant-select {
             &-arrow {
+                transition: all 0.33s;
                 filter: invert(1);
             }
 
             &-selector {
+                transition: all 0.33s;
                 @extend %all;
             }
         }
     }
     .ant-select-dropdown {
         @extend %all;
+        transition: all 0.33s;
 
         div[aria-selected="true"] {
+            transition: all 0.33s;
             background-color: $BG_CL;
             @extend %text_color;
         }
         div[aria-selected="false"] {
+            transition: all 0.33s;
             @extend %text_color;
             @extend %bg_color;
 

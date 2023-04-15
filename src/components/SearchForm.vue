@@ -1,11 +1,19 @@
 <template>
 	<a-input-group compact class="search-group-box">
-		<a-input allow-clear v-model:value="search"
+		<a-input allow-clear v-model:value="searchVal"
 			><template #prefix> <SearchOutlined /> </template
 		></a-input>
-		<a-select v-model:value="select" class="search-group-box_select">
+		<a-select v-model:value="selectType" class="search-group-box_select">
 			<a-select-option value="title">title</a-select-option>
 			<a-select-option value="author">author</a-select-option>
+		</a-select>
+		<a-select v-model:value="timeFilter" class="search-group-box_select-time">
+			<a-select-option value="all">all time</a-select-option>
+			<a-select-option value="year">year</a-select-option>
+			<a-select-option value="month">month</a-select-option>
+			<a-select-option value="week">week</a-select-option>
+			<a-select-option value="day">day</a-select-option>
+			<a-select-option value="hour">hour</a-select-option>
 		</a-select>
 	</a-input-group>
 </template>
@@ -24,21 +32,30 @@ export default {
 	},
 	data() {
 		return {
-			search: "",
-			select: "title",
+			searchVal: "",
+			selectType: "title",
+			timeFilter: "all",
 		};
 	},
 	methods: {},
 	watch: {
-		search(value) {
-			this.executor(value, this.select);
+		searchVal(value) {
+			sessionStorage.searchVal = value;
+			this.executor(value, this.selectType, this.timeFilter);
 		},
-		select(value) {
-			this.executor(this.search, value);
+		selectType(value) {
+			sessionStorage.selectType = value;
+			this.executor(this.searchVal, value, this.timeFilter);
+		},
+		timeFilter(value) {
+			sessionStorage.timeFilter = value;
+			this.executor(this.searchVal, this.selectType, value);
 		},
 	},
 	created() {
-		if (sessionStorage.select) this.select = sessionStorage.select;
+		if (sessionStorage.searchVal) this.searchVal = sessionStorage.searchVal;
+		if (sessionStorage.selectType) this.selectType = sessionStorage.selectType;
+		if (sessionStorage.timeFilter) this.timeFilter = sessionStorage.timeFilter;
 	},
 };
 </script>
@@ -48,7 +65,14 @@ export default {
 	display: flex;
 }
 .search-group-box_select {
-	min-width: 70px;
+	min-width: 85px;
+	max-width: 15%;
 	width: 15%;
+
+	&-time {
+		min-width: 90px;
+		max-width: 15%;
+		width: 15%;
+	}
 }
 </style>
