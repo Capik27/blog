@@ -4,6 +4,8 @@ $TEXT_COLOR_DARK: #d9d9d995;
 $BG_COLOR: #000000;
 $BG_CARD_COLOR: rgb(20, 20, 20);
 
+$BG_CL: #ffffff05;
+
 %text_color {
     color: $TEXT_COLOR_DARK;
 }
@@ -28,6 +30,34 @@ $BG_CARD_COLOR: rgb(20, 20, 20);
 
     .ant-message-notice-content {
         @extend %all;
+    }
+
+    .ant-input-group {
+        .ant-select {
+            &-arrow {
+                filter: invert(1);
+            }
+
+            &-selector {
+                @extend %all;
+            }
+        }
+    }
+    .ant-select-dropdown {
+        @extend %all;
+
+        div[aria-selected="true"] {
+            background-color: $BG_CL;
+            @extend %text_color;
+        }
+        div[aria-selected="false"] {
+            @extend %text_color;
+            @extend %bg_color;
+
+            &:hover {
+                background-color: $BG_CL;
+            }
+        }
     }
 
     .ant-input {

@@ -1,8 +1,6 @@
 <template>
 	<div class="posts-list" v-if="posts && posts.length">
-		<a-input @change="searchChange" allow-clear class="search">
-			<template #prefix> <SearchOutlined /> </template
-		></a-input>
+		<SearchForm :executor="searchHandler" class="input_gr" />
 		<a-card
 			class="card"
 			hoverable
@@ -29,14 +27,14 @@
 </template>
 
 <script>
-import { SearchOutlined } from "@ant-design/icons-vue";
 import PostListCardControls from "@/components/PostListCardControls.vue";
+import SearchForm from "@/components/SearchForm.vue";
 import { downloadPosts } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
 export default {
 	components: {
 		PostListCardControls,
-		SearchOutlined,
+		SearchForm,
 	},
 	data() {
 		return {
@@ -55,12 +53,14 @@ export default {
 			this.$router.push({ name: PATH_POSTS, params: { id } });
 		},
 
-		searchChange(e) {
+		searchHandler(value, option) {
+			if (!value) {
+				this.setFilteredPosts(this.posts);
+				return;
+			}
 			this.setFilteredPosts(
-				this.posts.filter(
-					(post) =>
-						post.title.toLowerCase().includes(e.target.value) ||
-						post.author.toLowerCase().includes(e.target.value)
+				this.posts.filter((post) =>
+					post?.[option].toLowerCase().includes(value)
 				)
 			);
 		},
@@ -97,7 +97,7 @@ export default {
 	display: flex;
 }
 
-.search {
+.input_gr {
 	margin-bottom: 25px;
 	grid-column: 1 / -1;
 }
