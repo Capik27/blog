@@ -78,9 +78,13 @@ export default defineComponent({
 		},
 	},
 	mounted() {
-		downloadPost(this.$route.params.id).then((res) => {
-			this.post = res;
-		});
+		downloadPost(this.$route.params.id)
+			.then((res) => {
+				this.post = res;
+			})
+			.catch(() => {
+				this.$router.push({ name: "error" });
+			});
 	},
 });
 </script>

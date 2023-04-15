@@ -32,6 +32,13 @@ $BG_CL: #ffffff05;
         @extend %all;
     }
 
+    .ant-result {
+        &-title,
+        &-subtitle {
+            @extend %text_color;
+        }
+    }
+
     .ant-input-group {
         transition: all 0.33s;
         .ant-select {

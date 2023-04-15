@@ -1,4 +1,8 @@
-import { createRouter, createWebHistory } from "vue-router";
+import {
+	createRouter,
+	//createWebHistory,
+	createWebHashHistory,
+} from "vue-router";
 import NotFoundPage from "@/pages/NotFoundPage";
 import PostListPage from "@/pages/PostListPage";
 import RegisterPage from "@/pages/RegisterPage";
@@ -38,6 +42,12 @@ const routes = [
 		name: "editpost",
 		component: EditPostPage,
 	},
+
+	{
+		path: "/error",
+		name: "error",
+		component: NotFoundPage,
+	},
 	{
 		path: "/:catchAll(.*)",
 		name: "notfound",
@@ -47,22 +57,31 @@ const routes = [
 
 const router = createRouter({
 	routes,
-	history: createWebHistory(process.env.BASE_URL),
+	history: createWebHashHistory(), //(process.env.BASE_URL),
 });
 
 import store from "@/store";
 
 router.beforeEach((to, from, next) => {
 	// console.log("route");
+	// console.log("FROM", from.path);
+	// console.log("TO", to.path);
 
-	//
 	if (!store.state.auth.currentUser) {
 		if (to.name != "signin" && to.name != "register") {
 			next({ name: "signin" });
 		} else next();
 	}
-	//
+
 	if (store.state.auth.currentUser) {
+		sessionStorage.page = to.path;
+		// if (
+		// 	from.name === to.name &&
+		// 	(to.name === "posts" || to.name == "editpost")
+		// ) {
+		// 	next({ name: to.name, params: { id: to.params.id } });
+		// }
+
 		if (to.name == "signin" || to.name == "register") {
 			next({ name: "main" });
 		} else next();

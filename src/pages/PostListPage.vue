@@ -41,6 +41,8 @@ export default {
 		return {
 			posts: null,
 			filtered: null,
+			timefiltered: null,
+			timeFilter: sessionStorage.timeFilter || "all",
 		};
 	},
 	methods: {
@@ -55,12 +57,17 @@ export default {
 		},
 
 		searchHandler(value, selectType, timeFilter) {
+			let result;
 			// Фильтруем по времени
-			let result = this.posts.filter((post) =>
-				dateInRange(post.createdAt.toDate(), timeFilter)
-			);
+			if (timeFilter !== this.timeFilter) {
+				result = this.posts.filter((post) =>
+					dateInRange(post.createdAt.toDate(), timeFilter)
+				);
+				this.timeFilter = timeFilter;
+				this.timefiltered = result;
+			}
 			// Фильтруем по параметру автор/тайтл
-			result = result.filter((post) =>
+			result = this.timefiltered.filter((post) =>
 				post?.[selectType].toLowerCase().includes(value.toLowerCase())
 			);
 
@@ -68,12 +75,14 @@ export default {
 		},
 		deleteCard(id) {
 			this.setFilteredPosts(this.filtered.filter((post) => post.id !== id));
+			this.timefiltered = this.timefiltered.filter((post) => post.id !== id);
 			this.posts = this.posts.filter((post) => post.id !== id);
 		},
 	},
 	created() {
 		downloadPosts().then((res) => {
 			this.setFilteredPosts(res);
+			this.timefiltered = res;
 			this.posts = res;
 		});
 	},

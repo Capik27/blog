@@ -1,5 +1,6 @@
 <template>
-	<div class="app_container">
+	<a-spin v-if="reload" class="reloader" size="large" />
+	<div class="app_container" v-else>
 		<NavBar :key="navbarKey" />
 		<div id="content">
 			<router-view />
@@ -14,6 +15,7 @@ export default {
 	components: { NavBar },
 	data() {
 		return {
+			reload: false,
 			navbarKey: 0,
 		};
 	},
@@ -21,19 +23,13 @@ export default {
 	created() {
 		//CHECK IF RELOAD PAGE WITH AUTH
 		if (sessionStorage.user) {
+			this.reload = true;
 			const period = 125;
 			const timer = setInterval(() => {
 				if (this.$store.state.auth.currentUser) {
-					const path = "/blog";
-					const index = sessionStorage.redirect.indexOf(path) + path.length;
-					const redirect = sessionStorage.redirect.slice(index);
-					delete sessionStorage.redirect;
-
 					this.navbarKey++;
-
-					if (redirect && redirect != location.href) {
-						this.$router.push(redirect);
-					}
+					this.$router.push(sessionStorage.page);
+					this.reload = false;
 					clearInterval(timer);
 				}
 			}, period);
@@ -58,6 +54,11 @@ export default {
 	display: flex;
 	justify-content: center;
 	height: 100vh;
+}
+
+.reloader {
+	align-self: center;
+	justify-self: center;
 }
 .app_container {
 	max-width: 1920px;
