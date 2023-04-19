@@ -4,10 +4,9 @@
 			$store.state.auth.currentUser &&
 			$store.state.auth.currentUser.uid === post.uid
 		"
-		@click.stop
 		class="card_controls"
 	>
-		<a-tooltip placement="bottom">
+		<a-tooltip placement="top">
 			<template #title>
 				<span>Edit</span>
 			</template>
@@ -21,7 +20,7 @@
 			@confirm="handleConfirm"
 			@cancel="handleCancel"
 		>
-			<a-tooltip placement="bottom">
+			<a-tooltip placement="top">
 				<template #title>
 					<span>Delete</span>
 				</template>
@@ -86,30 +85,30 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card_controls {
-	height: 14px;
-	font-size: 14px;
 	display: flex;
 	gap: 4px;
 	justify-content: center;
 	align-items: center;
-	position: absolute;
-	right: 4px;
-	top: 4px;
 	transition: all 0.33s;
-	opacity: 0;
 }
 
 .card_controls-link {
+	height: 14px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	color: rgba(0, 0, 0, 0.25);
-	text-decoration: none;
 
-	font-size: 14px;
-	transition: all 0.33s;
-}
-.card_controls-link:hover {
-	opacity: 1;
-	color: #1890ff;
+	span {
+		font-size: 14px;
+		text-decoration: none;
+		transition: all 0.33s;
+	}
+
+	&:hover span {
+		color: #1890ff;
+	}
 }
 </style>

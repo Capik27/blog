@@ -133,7 +133,7 @@ export async function uploadLike(postId, uid) {
 		createdAt: serverTimestamp(),
 	};
 	const db = {
-		[id]: newLike,
+		[uid]: newLike,
 	};
 	const docRef = doc(collection(firestore, PATH_LIKES), postId);
 	return setDoc(docRef, db, { merge: true });
@@ -150,43 +150,30 @@ async function uploadPreview(preview, id) {
 // DOWNLOAD
 ///////////////////////////////////////////////////////////////////////////
 
-export function downloadPosts() {
-	return downloadDocs(PATH_POSTS);
-}
+/////////////// PRIVATE
 
 async function downloadDocs(path) {
 	const docCollection = collection(firestore, path);
 	const queryDocs = await getDocs(docCollection);
 	const result = [];
 	if (queryDocs.empty) return result;
-	queryDocs.forEach(async (post) => {
-		const data = post.data();
+	queryDocs.forEach(async (doc) => {
+		const data = doc.data();
 		result.push(data);
 	});
 	return result;
 }
 
-export async function downloadComments(id) {
-	const comments = await downloadDoc(id, PATH_COMMENTS);
-	const result = [];
-	for (const key in comments) {
-		result.push(comments[key]);
-	}
-	result.sort(datasort);
+async function downloadLikesObj(path) {
+	const docCollection = collection(firestore, path);
+	const queryDocs = await getDocs(docCollection);
+	const result = {};
+	if (queryDocs.empty) return result;
+	queryDocs.forEach(async (doc) => {
+		const data = doc.data();
+		result[doc.id] = data;
+	});
 	return result;
-}
-
-export async function downloadLikes(id) {
-	const likes = await downloadDoc(id, PATH_LIKES);
-	const result = [];
-	for (const key in likes) {
-		result.push(likes[key]);
-	}
-	return result;
-}
-
-export function downloadPost(id) {
-	return downloadDoc(id, PATH_POSTS);
 }
 
 async function downloadDoc(id, path) {
@@ -200,21 +187,66 @@ async function downloadDoc(id, path) {
 	}
 }
 
+/////////////// PUBLIC
+
+// comments
+
+export async function downloadComments(id) {
+	const comments = await downloadDoc(id, PATH_COMMENTS);
+	const result = [];
+	for (const key in comments) {
+		result.push(comments[key]);
+	}
+	result.sort(datasort);
+	return result;
+}
+
+// likes
+
+export function downloadLikesBase() {
+	return downloadLikesObj(PATH_LIKES);
+}
+
+export async function downloadLikes(id) {
+	const likes = await downloadDoc(id, PATH_LIKES);
+	const result = {};
+	for (const key in likes) {
+		result[key] = likes[key];
+	}
+	return result;
+}
+
+// posts
+
+export function downloadPosts() {
+	return downloadDocs(PATH_POSTS);
+}
+export function downloadPost(id) {
+	return downloadDoc(id, PATH_POSTS);
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // DELETE
 ///////////////////////////////////////////////////////////////////////////
+
+/////////////// PRIVATE
 
 async function deletePostPreview(path) {
 	const previewRef = ref(storage, path);
 	await deleteObject(previewRef);
 }
 
+/////////////// PUBLIC
+
+// post
 export async function deletePost(id, previewName) {
 	await deletePostPreview(`${id}/${previewName}`);
 	await deleteDoc(doc(firestore, PATH_POSTS, id));
 	await deleteDoc(doc(firestore, PATH_COMMENTS, id));
 	await deleteDoc(doc(firestore, PATH_LIKES, id));
 }
+
+// comment
 
 export async function deleteComment(id, postId) {
 	const docRef = doc(firestore, PATH_COMMENTS, postId);
@@ -224,10 +256,12 @@ export async function deleteComment(id, postId) {
 	return setDoc(docRef, db, { merge: true });
 }
 
-export async function deleteLike(id, postId) {
+// like
+
+export async function deleteLike(uid, postId) {
 	const docRef = doc(firestore, PATH_LIKES, postId);
 	const db = {
-		[id]: deleteField(),
+		[uid]: deleteField(),
 	};
 	return setDoc(docRef, db, { merge: true });
 }

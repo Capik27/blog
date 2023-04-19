@@ -1,5 +1,8 @@
 <template>
-	<div class="posts-list" v-if="posts && posts.length">
+	<div
+		class="posts-list"
+		v-if="posts && posts.length && likes && $store.state.auth.currentUser"
+	>
 		<SearchForm :executor="searchHandler" class="input_gr" />
 		<a-card
 			class="card"
@@ -19,7 +22,18 @@
 					<span class="post_author">by {{ post.author }}</span>
 				</div>
 			</div>
-			<PostListCardControls :deleteCard="deleteCard" :post="post" />
+			<div class="card_options" @click.stop>
+				<PersonalLike
+					:parentUpd="updLike"
+					:postId="post.id"
+					:valueId="
+						likes?.[post.id]?.[$store.state.auth.currentUser.uid]?.uid
+							? likes[post.id][$store.state.auth.currentUser.uid].uid
+							: ''
+					"
+				/>
+				<PostListCardControls :deleteCard="deleteCard" :post="post" />
+			</div>
 		</a-card>
 	</div>
 	<h1 v-if="posts && !posts.length">No posts yet</h1>
@@ -28,12 +42,14 @@
 
 <script>
 import PostListCardControls from "@/components/PostListCardControls.vue";
+import PersonalLike from "@/components/PersonalLike.vue";
 import SearchForm from "@/components/SearchForm.vue";
 import dateInRange from "@/utils/dateInRange";
-import { downloadPosts } from "@/firebase/methods";
+import { downloadPosts, downloadLikesBase } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
 export default {
 	components: {
+		PersonalLike,
 		PostListCardControls,
 		SearchForm,
 	},
@@ -42,7 +58,9 @@ export default {
 			posts: null,
 			filtered: null,
 			timefiltered: null,
-			timeFilter: sessionStorage.timeFilter || "all",
+			timeFilter: "all",
+			likes: null,
+			likedFilter: false,
 		};
 	},
 	methods: {
@@ -56,7 +74,24 @@ export default {
 			this.$router.push({ name: PATH_POSTS, params: { id } });
 		},
 
-		searchHandler(value, selectType, timeFilter) {
+		updLike(postId) {
+			const uid = this.$store.state.auth.currentUser.uid;
+
+			if (this.likes[postId]?.[uid]) {
+				if (this.likedFilter) {
+					this.filtered = this.filtered.filter((p) => postId !== p.id);
+				}
+				delete this.likes[postId]?.[uid];
+			} else {
+				if (this.likes[postId]) {
+					this.likes[postId][uid] = { uid };
+				} else {
+					this.likes[postId] = { [uid]: { uid } };
+				}
+			}
+		},
+
+		searchHandler(value, selectType, timeFilter, likedFilter) {
 			let result;
 			// Фильтруем по времени
 			if (timeFilter !== this.timeFilter) {
@@ -66,8 +101,20 @@ export default {
 				this.timeFilter = timeFilter;
 				this.timefiltered = result;
 			}
+			// Фильтруем по лайкам
+			let likedFiltered = [];
+			this.likedFilter = likedFilter;
+			if (likedFilter) {
+				for (let p of this.timefiltered) {
+					if (this.likes[p.id]?.[this.$store.state.auth.currentUser.uid]) {
+						likedFiltered.push(p);
+					}
+				}
+			} else {
+				likedFiltered = this.timefiltered;
+			}
 			// Фильтруем по параметру автор/тайтл
-			result = this.timefiltered.filter((post) =>
+			result = likedFiltered.filter((post) =>
 				post?.[selectType].toLowerCase().includes(value.toLowerCase())
 			);
 
@@ -80,11 +127,22 @@ export default {
 		},
 	},
 	created() {
-		downloadPosts().then((res) => {
-			this.setFilteredPosts(res);
-			this.timefiltered = res;
-			this.posts = res;
-		});
+		const postsPromise = downloadPosts();
+		const likesPromise = downloadLikesBase();
+		Promise.all([postsPromise, likesPromise])
+			.then((responses) => {
+				const [res_posts, res_likesObj] = responses;
+				this.setFilteredPosts(res_posts);
+				this.timefiltered = res_posts;
+				this.posts = res_posts;
+
+				this.likes = res_likesObj;
+				// console.log("res post", res_posts);
+				// console.log("res likes", res_likesObj);
+			})
+			.catch(() => {
+				// Обработка ошибки
+			});
 	},
 };
 </script>
@@ -155,8 +213,22 @@ export default {
 	flex-grow: 1;
 	transition: all 0.33s;
 
+	&_options {
+		height: 14px;
+		font-size: 14px;
+		display: flex;
+		gap: 4px;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		right: 4px;
+		top: 4px;
+		transition: all 0.33s;
+		opacity: 0;
+	}
+
 	&:hover {
-		.card_controls {
+		.card_options {
 			opacity: 1;
 		}
 	}

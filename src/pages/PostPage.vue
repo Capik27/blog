@@ -26,7 +26,7 @@
 				>
 					<template #icon><HeartFilled /></template>
 				</a-button>
-				<strong v-if="likes">{{ likes.length }}</strong>
+				<strong v-if="likes">{{ Object.keys(likes).length }}</strong>
 			</div>
 			<div
 				class="post_controls"
@@ -50,7 +50,7 @@
 		<ComList v-if="!isLoading" :id="post.id" />
 		<a-spin size="large" v-else class="loading-comments" />
 	</div>
-	<a-spin size="large" v-if="!post" class="loading" />
+	<a-spin size="large" class="loading" v-if="!post" />
 </template>
 
 <script>
@@ -82,13 +82,7 @@ export default {
 			return D2S(timestamp);
 		},
 		checkLikePressed(uid) {
-			let result = null;
-			this.likes.forEach((like) => {
-				if (like.uid === uid) {
-					result = like.id;
-				}
-			});
-			this.likeIdPressed = result;
+			return this.likes[uid]?.uid;
 		},
 		handleToggleLike() {
 			if (this.likeIdPressed) {
@@ -120,11 +114,9 @@ export default {
 		},
 		async updateLikes() {
 			this.likes = await downloadLikes(this.post.id);
-			const uid = this.$store.state.auth.currentUser.uid;
-			this.checkLikePressed(uid);
-			//
-			// console.log("length", this.likes.length);
-			// console.log("pressed", this.likeIdPressed);
+			this.likeIdPressed = this.checkLikePressed(
+				this.$store.state.auth.currentUser.uid
+			);
 		},
 		update() {
 			const id = this.$route.params.id;
@@ -167,18 +159,21 @@ export default {
 	justify-self: flex-start;
 	gap: 2px;
 	color: rgba(0, 0, 0, 0.55);
+	span {
+		font-size: 20px;
+	}
 
 	strong {
 		font-size: 12px;
 	}
 
 	&-icon {
-		transition: all 0.33s;
+		transition: color 0.33s ease-in-out;
 		color: rgba(0, 0, 0, 0.55);
 	}
 
 	&-pressed {
-		transition: all 0.33s;
+		transition: color 0.33s ease-in-out;
 		color: rgba(255, 0, 0, 0.9);
 	}
 }

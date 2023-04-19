@@ -114,6 +114,23 @@ $BG_CL: #ffffff05;
                 @extend %text_color;
             }
 
+            .search-group-box {
+                &_liked {
+                    @extend %text_color;
+                    &:hover {
+                        color: rgba(255, 0, 0, 0.9);
+                    }
+                }
+
+                &_notliked {
+                    @extend %text_color;
+                    &:hover {
+                        transition: all 0.33s;
+                        color: #1890ff;
+                    }
+                }
+            }
+
             &-disabled {
                 background: $BG_CARD_COLOR;
                 cursor: not-allowed;
@@ -282,9 +299,15 @@ $BG_CL: #ffffff05;
     .card {
         @extend %all;
         background-color: #ffffff05;
-        &_controls-link {
+
+        &_controls-link span {
             @extend %text_color;
         }
+
+        &_like span {
+            @extend %text_color;
+        }
+
         &:hover {
             box-shadow: 0 1px 2px -2px rgba(255, 255, 255, 0.16), 0 3px 6px 0 rgba(255, 255, 255, 0.12),
                 0 5px 12px 4px rgba(255, 255, 255, 0.09);
