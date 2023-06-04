@@ -152,10 +152,10 @@ export default {
 			// this.$store.commit("toggleTheme");
 			document.querySelector("body").classList.toggle("dark");
 
-			if (sessionStorage.theme) {
-				delete sessionStorage.theme;
+			if (localStorage.theme) {
+				delete localStorage.theme;
 			} else {
-				sessionStorage.theme = "dark";
+				localStorage.theme = "dark";
 			}
 		},
 	},

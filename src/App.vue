@@ -35,7 +35,7 @@ export default {
 			}, period);
 		}
 		//CHECK THEME WITH AUTH
-		if (sessionStorage.theme) {
+		if (localStorage.theme) {
 			document.querySelector("body").classList.add("dark");
 		}
 	},

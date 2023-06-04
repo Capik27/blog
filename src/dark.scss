@@ -73,6 +73,57 @@ $BG_CL: #ffffff05;
         }
     }
 
+    .ant-pagination {
+        &-item {
+            @extend %all;
+
+            a {
+                @extend %text_color;
+            }
+
+            &:hover {
+                border-color: #1890ff;
+                a {
+                    color: #1890ff;
+                }
+            }
+
+            &-active {
+                border-color: #1890ff;
+                a {
+                    color: #1890ff;
+                }
+            }
+        }
+
+        &-disabled {
+            &:hover button {
+                @extend %border;
+                span {
+                    color: #d9d9d925;
+                }
+            }
+
+            span {
+                color: #d9d9d925;
+            }
+        }
+
+        &-prev,
+        &-next {
+            button {
+                @extend %all;
+            }
+
+            span {
+                @extend %text_color;
+            }
+            &:hover span {
+                color: #1890ff;
+            }
+        }
+    }
+
     .ant-input {
         @extend %all;
 

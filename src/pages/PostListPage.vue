@@ -8,7 +8,7 @@
 			class="card"
 			hoverable
 			size="small"
-			v-for="post in filtered"
+			v-for="post in pagList"
 			:key="post.id"
 			:data-id="post.id"
 			@click.prevent="cardClick"
@@ -36,6 +36,11 @@
 			</div>
 		</a-card>
 	</div>
+	<a-pagination
+		v-if="posts && filtered.length > itemLimit"
+		:total="filtered.length"
+		v-model:current="currentPage"
+	/>
 	<h1 v-if="posts && !posts.length">No posts yet</h1>
 	<a-spin v-if="!posts" class="loading" size="large" />
 </template>
@@ -47,6 +52,7 @@ import SearchForm from "@/components/SearchForm.vue";
 import dateInRange from "@/utils/dateInRange";
 import { downloadPosts, downloadLikesBase } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
+
 export default {
 	components: {
 		PersonalLike,
@@ -61,6 +67,10 @@ export default {
 			timeFilter: "all",
 			likes: null,
 			likedFilter: false,
+			//
+			currentPage: 1,
+			itemLimit: 12,
+			pagList: null,
 		};
 	},
 	methods: {
@@ -89,6 +99,7 @@ export default {
 					this.likes[postId] = { [uid]: { uid } };
 				}
 			}
+			this.pagListUpd();
 		},
 
 		searchHandler(value, selectType, timeFilter, likedFilter) {
@@ -119,11 +130,28 @@ export default {
 			);
 
 			this.setFilteredPosts(result);
+			this.pagListUpd();
 		},
 		deleteCard(id) {
 			this.setFilteredPosts(this.filtered.filter((post) => post.id !== id));
 			this.timefiltered = this.timefiltered.filter((post) => post.id !== id);
 			this.posts = this.posts.filter((post) => post.id !== id);
+			this.pagListUpd();
+		},
+		pagListUpd() {
+			this.pagList = this.filtered.filter(
+				(_, index) =>
+					index + 1 <= this.itemLimit * this.currentPage &&
+					index + 1 > this.itemLimit * this.currentPage - this.itemLimit
+			);
+			if (this.filtered.length <= this.itemLimit) {
+				this.currentPage = 1;
+			}
+		},
+	},
+	watch: {
+		currentPage() {
+			this.pagListUpd();
 		},
 	},
 	created() {
@@ -135,7 +163,7 @@ export default {
 				this.setFilteredPosts(res_posts);
 				this.timefiltered = res_posts;
 				this.posts = res_posts;
-
+				this.pagListUpd();
 				this.likes = res_likesObj;
 				// console.log("res post", res_posts);
 				// console.log("res likes", res_likesObj);
@@ -158,6 +186,7 @@ export default {
 	grid-template-columns: repeat(auto-fit, minmax(210px, 300px));
 	justify-content: center;
 	gap: 10px;
+	padding-bottom: 35px;
 
 	/* display: flex;
 	flex-wrap: wrap; */

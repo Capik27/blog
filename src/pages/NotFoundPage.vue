@@ -5,7 +5,7 @@
 		sub-title="Sorry, the page you visited does not exist."
 	>
 		<template #extra>
-			<a-button type="primary" @click="$router.push({ name: 'main' })">Back Home</a-button>
+			<a-button type="primary">Back Home</a-button>
 		</template>
 	</a-result>
 </template>
@@ -14,4 +14,8 @@ export default {
 	//
 };
 </script>
-<style lang=""></style>
+<style lang="scss" scoped>
+.ant-result {
+	padding: 10px;
+}
+</style>
