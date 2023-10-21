@@ -6,13 +6,13 @@
 			:placeholder="`${selectType} search`"
 		>
 			<template #suffix>
-				<a-tooltip placement="top" v-if="likedFilter">
+				<a-tooltip :placement="isMobile ? 'left':'top'" v-if="likedFilter">
 					<template #title>
 						<span>Like filter On</span>
 					</template>
 					<HeartFilled @click="toggleLike" class="search-group-box_liked" />
 				</a-tooltip>
-				<a-tooltip placement="top" v-else>
+				<a-tooltip :placement="isMobile ? 'left':'top'" v-else>
 					<template #title>
 						<span>Like filter Off</span>
 					</template>
@@ -23,6 +23,7 @@
 				</a-tooltip>
 			</template>
 		</a-input>
+    <div class="search-group-box_selects">
 		<a-select v-model:value="selectType" class="search-group-box_select">
 			<a-select-option value="title">title</a-select-option>
 			<a-select-option value="author">author</a-select-option>
@@ -41,10 +42,12 @@
 				<a-select-option value="hour">hour</a-select-option>
 			</a-select>
 		</a-tooltip>
+	</div>
 	</a-input-group>
 </template>
 
 <script>
+import isMobile from "@/utils/isMobile";
 import {
 	// SearchOutlined,
 	HeartFilled,
@@ -69,6 +72,11 @@ export default {
 			timeFilter: "all",
 			likedFilter: false,
 		};
+	},
+	computed:{
+		isMobile(){
+			return isMobile() || window.innerWidth <= 400;
+		}
 	},
 	methods: {
 		toggleLike() {
@@ -138,5 +146,21 @@ export default {
 		max-width: 15%;
 		width: 15%;
 	}
+}
+
+.search-group-box_selects{
+	display: flex;
+}
+
+@media(max-width:400px){
+	.search-group-box{
+		flex-direction: column;
+	}
+
+	.search-group-box_select, .search-group-box_select-time {
+		max-width: 100%;
+		width: 100%;
+	}
+		
 }
 </style>

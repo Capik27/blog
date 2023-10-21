@@ -40,6 +40,8 @@
 		v-if="posts && filtered.length > itemLimit"
 		:total="filtered.length"
 		v-model:current="currentPage"
+		v-model:pageSize="itemLimit"
+		
 	/>
 	<h1 v-if="posts && !posts.length">No posts yet</h1>
 	<a-spin v-if="!posts" class="loading" size="large" />
@@ -52,6 +54,8 @@ import SearchForm from "@/components/SearchForm.vue";
 import dateInRange from "@/utils/dateInRange";
 import { downloadPosts, downloadLikesBase } from "@/firebase/methods";
 import { PATH_POSTS } from "@/firebase/constants";
+import isMobile from "@/utils/isMobile";
+import getVolumeOfCards from "@/utils/getVolumeOfCards";
 
 export default {
 	components: {
@@ -68,8 +72,8 @@ export default {
 			likes: null,
 			likedFilter: false,
 			//
-			currentPage: 1,
-			itemLimit: 12,
+			currentPage: this.$store.state.pagination.page,
+			itemLimit: 24,
 			pagList: null,
 		};
 	},
@@ -148,9 +152,25 @@ export default {
 				this.currentPage = 1;
 			}
 		},
+		updCardsNumber() {
+            if(!isMobile()){
+                this.itemLimit = getVolumeOfCards();
+                //console.log('this.itemLimit',this.itemLimit);
+            }
+		},
+		resizeUpd(){
+			this.updCardsNumber();
+			this.pagListUpd();
+
+			// if(this.filtered.length < this.itemLimit){
+            //     console.log('remove resize watcher')
+            //     window.removeEventListener('resize', this.resizeUpd);
+			// }
+		}
 	},
 	watch: {
-		currentPage() {
+		currentPage(value) {
+			this.$store.dispatch('updatePageNumber',value)
 			this.pagListUpd();
 		},
 	},
@@ -172,10 +192,20 @@ export default {
 				// Обработка ошибки
 			});
 	},
+	beforeMount(){
+		this.updCardsNumber();
+	},
+	mounted() {
+		window.addEventListener('resize', this.resizeUpd);
+	},
+	beforeUnmount() {
+		window.removeEventListener('resize', this.resizeUpd);
+	},
 };
 </script>
 
 <style lang="scss" scoped>
+$maxImageSize: 64px;
 .loading {
 	margin-top: 55px;
 }
@@ -183,31 +213,43 @@ export default {
 .posts-list {
 	width: 100%;
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(210px, 300px));
+	grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
 	justify-content: center;
 	gap: 10px;
 	padding-bottom: 35px;
 
 	/* display: flex;
 	flex-wrap: wrap; */
+	@media(max-width: 400px) {
+		padding-bottom: 12px;
+	}
 }
 .card_post {
 	display: flex;
+	height: 100%;
 }
 
 .input_gr {
 	margin-bottom: 25px;
 	grid-column: 1 / -1;
+
+	@media(max-width: 400px) {
+		margin-bottom: 0px;
+	}
 }
 
 .post_preview {
+	display: flex;
 	margin-right: 10px;
 	border: 1px solid #d9d9d9;
 	overflow: hidden;
 	border-radius: 2px;
-	width: 64px;
-	min-width: 64px;
-	height: 64px;
+
+	width: $maxImageSize;
+	min-width: $maxImageSize;
+	height: $maxImageSize;
+	//min-height: 64px;
+
 	background-color: rgb(219, 219, 219);
 	overflow: hidden;
 }
@@ -233,6 +275,7 @@ export default {
 	font-size: 11px;
 	line-height: 12px;
 }
+
 .card {
 	background-color: #fffbfb;
 	border: 1px solid hsl(0, 0%, 90%);
@@ -261,10 +304,29 @@ export default {
 			opacity: 1;
 		}
 	}
-}
 
+	@media (max-width: 567px){
+		width: 100%;
+		max-width: 300px;
+		justify-self: center;
+	}
+}
 .card_deleting_animation {
 	transition: all 0.33s;
 	transform: scale(0);
 }
+
+
+// @media(max-width: 567px) {
+// 	.card {
+// 		width: 100%;
+// 		max-width: 300px;
+// 		justify-self: center;
+// 	}
+
+// 	.input_gr {
+// 		margin-bottom: 0px;
+// 	}
+
+// }
 </style>

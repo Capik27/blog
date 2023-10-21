@@ -93,4 +93,12 @@ html {
 		background-color: transparent;
 	}
 }
+
+@media(max-width: 400px) {
+	#content {
+		padding: 12px;
+	}
+}
+
+
 </style>
